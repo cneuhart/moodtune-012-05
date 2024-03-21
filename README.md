@@ -1,6 +1,6 @@
 # moodtune-012-05
 
-cd ProjectSourceCode
-cd src
-npm install
-docker compose up
+cd ProjectSourceCode <br />
+cd src <br />
+npm install <br />
+docker compose up <br />
