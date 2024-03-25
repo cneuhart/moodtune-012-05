@@ -39,6 +39,8 @@ app.use(
 
 //api routes
 
+
+//default route
 app.get('/', (req,res) => {
     //res.render('pages/test');
     res.sendFile(__dirname + "/views/pages/test.html");
@@ -54,7 +56,7 @@ const redirect_uri = "http://localhost:3000/callback";
 
 
 app.get('/spotifylogin', (req,res) => {
-  var state = 123456789123456;
+  var state = 123456789123456; //should be randomly generated number (16)
   var scope = 'user-read-private user-read-email';
 
   var authJSON = {
@@ -70,11 +72,26 @@ app.get('/spotifylogin', (req,res) => {
   res.redirect(`https://accounts.spotify.com/authorize?${authQuery}`);
 });
 
-app.get('/callback', (req,res) => {
+const OAuth = require('./resources/js/OAuth.js')
 
-  res.redirect('/')
+app.get('/callback', async function(req, res) {
+
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+
+  if (state === null) {
+    res.redirect('/#' + new URLSearchParams({error: 'state_mismatch'}).toString());
+  } 
+  else {
+    const accessToken = await OAuth.getAccessToken(client_id, code, redirect_uri, client_secret);
+    
+    //access token returned in URL
+    res.redirect('/#' + new URLSearchParams({accessToken: accessToken}).toString());
+  }
 
 });
+
+
 
 // *****************************************************
 // <!-- Start Server-->
