@@ -16,7 +16,6 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 app.use(express.static(__dirname + '/'));
 
 
-
 const hbs = handlebars.create({
     extname: 'hbs',
     layoutsDir: __dirname + '/views/layouts',
@@ -38,10 +37,44 @@ app.use(
 );
   
 
+//api routes
+
 app.get('/', (req,res) => {
-    res.render('pages/test');
+    //res.render('pages/test');
+    res.sendFile(__dirname + "/views/pages/test.html");
 });
 
+
+//spotify login
+
+//stored in keys.js to prevent leaking id/secret
+const {client_id, client_secret} = require('./resources/js/keys.js')
+
+const redirect_uri = "http://localhost:3000/callback";
+
+
+app.get('/spotifylogin', (req,res) => {
+  var state = 123456789123456;
+  var scope = 'user-read-private user-read-email';
+
+  var authJSON = {
+    response_type: 'code',
+    client_id: client_id,
+    scope: scope,
+    redirect_uri: redirect_uri,
+    state: state
+  };
+
+  const authQuery = new URLSearchParams(authJSON).toString();
+
+  res.redirect(`https://accounts.spotify.com/authorize?${authQuery}`);
+});
+
+app.get('/callback', (req,res) => {
+
+  res.redirect('/')
+
+});
 
 // *****************************************************
 // <!-- Start Server-->
