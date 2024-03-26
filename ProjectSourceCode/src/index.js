@@ -16,6 +16,10 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 app.use(express.static(__dirname + '/'));
 
 
+//TEST COOKIES
+const cookieParser = require('cookie-parser')
+app.use(cookieParser());
+
 const hbs = handlebars.create({
     extname: 'hbs',
     layoutsDir: __dirname + '/views/layouts',
@@ -57,7 +61,7 @@ const redirect_uri = "http://localhost:3000/callback";
 
 app.get('/spotifylogin', (req,res) => {
   var state = 123456789123456; //should be randomly generated number (16)
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-top-read';
 
   var authJSON = {
     response_type: 'code',
@@ -85,13 +89,43 @@ app.get('/callback', async function(req, res) {
   else {
     const accessToken = await OAuth.getAccessToken(client_id, code, redirect_uri, client_secret);
     
+    //save access_token in cookies
+    res.clearCookie('access_token');
+    res.cookie('access_token', accessToken);
     //access token returned in URL
     res.redirect('/#' + new URLSearchParams({accessToken: accessToken}).toString());
   }
 
 });
 
+async function getTopCall(savedToken){
+    const result = await fetch("https://api.spotify.com/v1/me/top/artists", {
+        method: "GET",
+        headers: { 
+            'Authorization': 'Bearer ' + savedToken 
+        }
+    });
 
+    return await result.json();
+}
+
+app.get('/topArtist', async (req,res) => {
+
+  const savedToken = req.cookies.access_token;
+
+  const topCall = await getTopCall(savedToken)
+  .then(results => {
+    res.render('pages/test', {
+      data: results
+    });
+  })
+  .catch(error => {
+    res.status('500').json({
+      error: error
+    })
+  });
+  
+});
 
 // *****************************************************
 // <!-- Start Server-->

@@ -6,6 +6,8 @@ module.exports.getAccessToken = async function getAccessToken(client_id, code, r
     params.append("client_id", client_id);
     //params.append("code_verifier", verifier);
 
+
+    //use .then/.catch ??
     const result = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: { 
