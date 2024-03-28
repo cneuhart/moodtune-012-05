@@ -61,6 +61,7 @@ const redirect_uri = "http://localhost:3000/callback";
 
 app.get('/spotifylogin', (req,res) => {
   var state = 123456789123456; //should be randomly generated number (16)
+  //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
   var scope = 'user-read-private user-read-email user-top-read';
 
   var authJSON = {
@@ -87,11 +88,18 @@ app.get('/callback', async function(req, res) {
     res.redirect('/#' + new URLSearchParams({error: 'state_mismatch'}).toString());
   } 
   else {
-    const accessToken = await OAuth.getAccessToken(client_id, code, redirect_uri, client_secret);
-    
+    const tokens = await OAuth.getAccessToken(client_id, client_secret, code, redirect_uri);
+
+    const accessToken = tokens.access_token;
+    const refreshToken = tokens.refresh_token;
+
     //save access_token in cookies
     res.clearCookie('access_token');
     res.cookie('access_token', accessToken);
+    //save refresh_token in cookies
+    res.clearCookie('refresh_token');
+    res.cookie('refresh_token', refreshToken);
+
     //access token returned in URL
     res.redirect('/#' + new URLSearchParams({accessToken: accessToken}).toString());
   }
@@ -125,6 +133,31 @@ app.get('/topArtist', async (req,res) => {
     })
   });
   
+});
+
+app.get('/testCookie', (req,res) => {
+  console.log(req.cookies.access_token);
+  res.redirect('/');
+});
+
+
+app.get('/refreshToken', async (req,res) => {
+  if (req.cookies.refresh_token === null) {
+    res.redirect('/#' + new URLSearchParams({error: 'no_refresh_token'}).toString());
+  } 
+  else {
+
+    const refresh_token = req.cookies.refresh_token;
+
+    const newAccessToken = await OAuth.refreshAccessToken(client_id, client_secret, refresh_token);
+
+    //save new_access_token in cookies
+    res.clearCookie('access_token');
+    res.cookie('access_token', newAccessToken);
+
+    //new access token returned in URL
+    res.redirect('/#' + new URLSearchParams({accessToken: newAccessToken}).toString());
+  }
 });
 
 // *****************************************************
