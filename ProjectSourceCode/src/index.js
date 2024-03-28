@@ -106,22 +106,13 @@ app.get('/callback', async function(req, res) {
 
 });
 
-async function getTopCall(savedToken){
-    const result = await fetch("https://api.spotify.com/v1/me/top/artists", {
-        method: "GET",
-        headers: { 
-            'Authorization': 'Bearer ' + savedToken 
-        }
-    });
-
-    return await result.json();
-}
+const spotifyCall = require('./resources/js/spotifyCall.js')
 
 app.get('/topArtist', async (req,res) => {
 
   const savedToken = req.cookies.access_token;
 
-  const topCall = await getTopCall(savedToken)
+  spotifyCall.getTopCall(savedToken)
   .then(results => {
     res.render('pages/test', {
       data: results
