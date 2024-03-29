@@ -16,7 +16,8 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 
 //include local custom files/dependencies
 const OAuth = require('./resources/js/OAuth.js')
-const spotifyCall = require('./resources/js/spotifyCall.js')
+const spotifyCall = require('./resources/js/spotifyCall.js');
+const { time } = require('console');
 
 
 //id/secret stored in .env to prevent leaking id/secret
@@ -137,9 +138,29 @@ app.get('/topArtist', async (req,res) => {
 
   const savedToken = req.session.access_token;
 
-  spotifyCall.getTopCall(savedToken)
+  spotifyCall.getTopArtists(savedToken)
   .then(results => {
     res.render('pages/test', {
+      data: results
+    });
+  })
+  .catch(error => {
+    res.status('500').json({
+      error: error
+    })
+  });
+  
+});
+
+app.get('/topTracks', async (req,res) => {
+
+  const savedToken = req.session.access_token;
+
+  const time_range = req.query.time_range;
+
+  spotifyCall.getTopTracks(savedToken, time_range)
+  .then(results => {
+    res.render('pages/tracks', {
       data: results
     });
   })
