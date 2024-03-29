@@ -13,6 +13,12 @@ const session = require('express-session'); // To set the session object. To sto
 //const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
+
+//include local custom files/dependencies
+const OAuth = require('./resources/js/OAuth.js')
+const spotifyCall = require('./resources/js/spotifyCall.js')
+
+
 //id/secret stored in .env to prevent leaking id/secret
 const client_id = process.env.client_id;
 const client_secret = process.env.client_secret;
@@ -63,7 +69,7 @@ app.get('/', (req,res) => {
 });
 
 
-//spotify login
+//spotify login/auth
 app.get('/spotifylogin', (req,res) => {
   var state = 123456789123456; //should be randomly generated number (16)
   //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
@@ -82,7 +88,6 @@ app.get('/spotifylogin', (req,res) => {
   res.redirect(`https://accounts.spotify.com/authorize?${authQuery}`);
 });
 
-const OAuth = require('./resources/js/OAuth.js')
 
 app.get('/callback', async function(req, res) {
 
@@ -109,8 +114,25 @@ app.get('/callback', async function(req, res) {
 
 });
 
-const spotifyCall = require('./resources/js/spotifyCall.js')
+app.get('/refreshToken', async (req,res) => {
+  if (req.session.refresh_token === null) {
+    res.redirect('/#' + new URLSearchParams({error: 'no_refresh_token'}).toString());
+  } 
+  else {
 
+    const refresh_token = req.session.refresh_token;
+
+    const newAccessToken = await OAuth.refreshAccessToken(client_id, client_secret, refresh_token);
+
+    //save new_access_token in session (replace old token)
+    req.session.access_token = newAccessToken;
+
+    //new access token returned in URL
+    res.redirect('/#' + new URLSearchParams({accessToken: newAccessToken}).toString());
+  }
+});
+
+//non-auth spotify api calls:
 app.get('/topArtist', async (req,res) => {
 
   const savedToken = req.session.access_token;
@@ -135,23 +157,7 @@ app.get('/testSession', (req,res) => {
 });
 
 
-app.get('/refreshToken', async (req,res) => {
-  if (req.session.refresh_token === null) {
-    res.redirect('/#' + new URLSearchParams({error: 'no_refresh_token'}).toString());
-  } 
-  else {
 
-    const refresh_token = req.session.refresh_token;
-
-    const newAccessToken = await OAuth.refreshAccessToken(client_id, client_secret, refresh_token);
-
-    //save new_access_token in session (replace old token)
-    req.session.access_token = newAccessToken;
-
-    //new access token returned in URL
-    res.redirect('/#' + new URLSearchParams({accessToken: newAccessToken}).toString());
-  }
-});
 
 // *****************************************************
 // <!-- Start Server-->
