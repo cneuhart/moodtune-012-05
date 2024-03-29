@@ -13,12 +13,16 @@ const session = require('express-session'); // To set the session object. To sto
 //const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
+//id/secret stored in .env to prevent leaking id/secret
+const client_id = process.env.client_id;
+const client_secret = process.env.client_secret;
+
+//spotify application redirect_uri; set in spotify developer dashboard
+const redirect_uri = "http://localhost:3000/callback";
+
+//lets us use relative pathing when using files (rather than only absolute)
 app.use(express.static(__dirname + '/'));
 
-
-//TEST COOKIES
-const cookieParser = require('cookie-parser')
-app.use(cookieParser());
 
 const hbs = handlebars.create({
     extname: 'hbs',
@@ -26,13 +30,22 @@ const hbs = handlebars.create({
     partialsDir: __dirname + '/views/partials',
   });
 
-
-// Register `hbs` as our view engine using its bound `engine()` function.
+// Register `hbs` as  view engine using its bound `engine()` function.
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
+// initialize session variables
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    access_token: "empty_access_token",
+    refresh_token: "empty_refresh_token"
+  })
+);
 
 app.use(
   bodyParser.urlencoded({
@@ -43,7 +56,6 @@ app.use(
 
 //api routes
 
-
 //default route
 app.get('/', (req,res) => {
     //res.render('pages/test');
@@ -52,13 +64,6 @@ app.get('/', (req,res) => {
 
 
 //spotify login
-
-//stored in keys.js to prevent leaking id/secret
-const {client_id, client_secret} = require('./resources/js/keys.js')
-
-const redirect_uri = "http://localhost:3000/callback";
-
-
 app.get('/spotifylogin', (req,res) => {
   var state = 123456789123456; //should be randomly generated number (16)
   //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
@@ -93,12 +98,10 @@ app.get('/callback', async function(req, res) {
     const accessToken = tokens.access_token;
     const refreshToken = tokens.refresh_token;
 
-    //save access_token in cookies
-    res.clearCookie('access_token');
-    res.cookie('access_token', accessToken);
-    //save refresh_token in cookies
-    res.clearCookie('refresh_token');
-    res.cookie('refresh_token', refreshToken);
+    //save access_token in session
+    //save refresh_token in session
+    req.session.access_token = accessToken;
+    req.session.refresh_token = refreshToken;
 
     //access token returned in URL
     res.redirect('/#' + new URLSearchParams({accessToken: accessToken}).toString());
@@ -110,7 +113,7 @@ const spotifyCall = require('./resources/js/spotifyCall.js')
 
 app.get('/topArtist', async (req,res) => {
 
-  const savedToken = req.cookies.access_token;
+  const savedToken = req.session.access_token;
 
   spotifyCall.getTopCall(savedToken)
   .then(results => {
@@ -126,25 +129,24 @@ app.get('/topArtist', async (req,res) => {
   
 });
 
-app.get('/testCookie', (req,res) => {
-  console.log(req.cookies.access_token);
+app.get('/testSession', (req,res) => {
+  console.log(req.session.access_token);
   res.redirect('/');
 });
 
 
 app.get('/refreshToken', async (req,res) => {
-  if (req.cookies.refresh_token === null) {
+  if (req.session.refresh_token === null) {
     res.redirect('/#' + new URLSearchParams({error: 'no_refresh_token'}).toString());
   } 
   else {
 
-    const refresh_token = req.cookies.refresh_token;
+    const refresh_token = req.session.refresh_token;
 
     const newAccessToken = await OAuth.refreshAccessToken(client_id, client_secret, refresh_token);
 
-    //save new_access_token in cookies
-    res.clearCookie('access_token');
-    res.cookie('access_token', newAccessToken);
+    //save new_access_token in session (replace old token)
+    req.session.access_token = newAccessToken;
 
     //new access token returned in URL
     res.redirect('/#' + new URLSearchParams({accessToken: newAccessToken}).toString());
