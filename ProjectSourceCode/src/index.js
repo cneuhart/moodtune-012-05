@@ -54,6 +54,34 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
 
+app.get('/register', (req, res) => { //register API(made in lab 11)
+      res.render('pages/register');
+  });
+  app.post('/register', async (req, res) => {
+      //hash the password using bcrypt library
+      const hash = await bcrypt.hash(req.body.password, 10);
+      const username = req.body.username;
+
+      var query = 'INSERT INTO users(username, password) VALUES ($1, $2) RETURNING *;';
+      // To-DO: Insert username and hashed password into the 'users' table
+      // db comand -defining user in here
+      db.one(query, [username, hash])
+      .then(data => {
+        user.username = username;
+        user.password = hash;
+        
+        console.log("Hey there")
+        req.session.user = user;
+        req.session.save();
+
+        //res.redirect('/login');
+      })
+      .catch(error => {
+        console.log('ERROR:', error.message || error);
+        res.redirect('/register');
+      });
+
+  });
 
 // *****************************************************
 // <!-- Start Server-->
