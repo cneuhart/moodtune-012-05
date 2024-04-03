@@ -28,5 +28,36 @@ describe('Server!', () => {
 });
 
 // *********************** TODO: WRITE 2 UNIT TESTCASES **************************
+//Positive test case
+describe('Testing Add User API', () => {
+  it('positive : /register', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({id: 5, name: 'John Doe', dob: '2020-02-20'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.message).to.equals('Success');
+        done();
+      });
+  });
+});
 
+//Negitive test case
+describe('Testing Add User API', () => {
+  it('positive : /register', done => {
+    // Refer above for the positive testcase implementation
+  });
+  it('Negative : /register. Checking invalid name', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({id: '5', name: 10, dob: '2020-02-20'})
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.message).to.equals('Invalid input');
+        done();
+      });
+  });
+});
 // ********************************************************************************
