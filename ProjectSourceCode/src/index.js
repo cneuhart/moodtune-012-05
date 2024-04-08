@@ -70,6 +70,10 @@ app.use(
 
 //api routes
 
+app.get('/', (req, res) => {
+  res.render('pages/homepage');
+});
+
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
