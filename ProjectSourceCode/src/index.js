@@ -194,7 +194,7 @@ app.get('/topArtist', async (req,res) => {
 
   spotifyCall.getTopArtists(savedToken)
   .then(results => {
-    res.render('pages/artists', {
+    res.render('pages/statistics', {
       data: results
     });
   })
@@ -215,7 +215,7 @@ app.get('/topTracks', async (req,res) => {
 
   spotifyCall.getTopTracks(savedToken, time_range)
   .then(results => {
-    res.render('pages/tracks', {
+    res.render('pages/statistics', {
       data: results
     });
   })
@@ -227,8 +227,12 @@ app.get('/topTracks', async (req,res) => {
   
 });
 
-//session testing route
+//user statistics route
+  //SHOULD BE GRABBING DATA FROM DATABASE THEN REFRESHING THROUGH SPOTIFY ON TIMER
 
+
+
+//session testing route
 app.get('/testSession', (req,res) => {
   console.log(req.session);
   res.redirect('/');
