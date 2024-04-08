@@ -122,18 +122,14 @@ app.post('/register', async (req,res) => {
     var query = `INSERT INTO users (username, password) VALUES ('${username}','${hash}') returning *;`;
     db.one(query)
     .then(() => {
-      res.status(200)
-      .render('pages/login', {
-        success: true,
-        message: "Account created, use credentials to login."
-      }, () => {res.json({message: "Account created, use credentials to login."})} )
+      res.redirect(200,'pages/login')
     })
     .catch(() => {
       res.status(400)
       .render('pages/register', {
         error: true,
         message: "Username already associated with an account."
-      }, () => {res.json({message: "Username already associated with an account."})} )
+      })
     })
   }
 });
