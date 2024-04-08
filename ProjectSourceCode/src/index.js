@@ -228,8 +228,13 @@ app.get('/topTracks', async (req,res) => {
 });
 
 //user statistics route
-  //SHOULD BE GRABBING DATA FROM DATABASE THEN REFRESHING THROUGH SPOTIFY ON TIMER
+  app.get('/statistics', async (req,res) => {
 
+    const savedToken = req.session.access_token;
+  
+    //lazy-loading: call API only when elements are clicked on stats page; update info into DB at same time
+    
+  });
 
 
 //session testing route
