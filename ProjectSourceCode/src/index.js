@@ -195,7 +195,7 @@ app.get('/topArtist', async (req,res) => {
   spotifyCall.getTopArtists(savedToken)
   .then(results => {
     res.render('pages/statistics', {
-      data: results
+      artistdata: results
     });
   })
   .catch(error => {
@@ -216,7 +216,7 @@ app.get('/topTracks', async (req,res) => {
   spotifyCall.getTopTracks(savedToken, time_range)
   .then(results => {
     res.render('pages/statistics', {
-      data: results
+      trackdata: results
     });
   })
   .catch(error => {
