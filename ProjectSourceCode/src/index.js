@@ -43,6 +43,9 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
+
+//session kinda sucks in comparison to cookies (deletes all information when node server restarts), don't know if allowed to use cookies
+//cookies preserve spotify auth tokens, preventing constant renewal if restarting server often (may not be that big of a problem but still annoying)
 // initialize session variables
 app.use(
   session({
@@ -66,7 +69,8 @@ app.use(
 //default route
 app.get('/', (req,res) => {
     //res.render('pages/test');
-    res.sendFile(__dirname + "/views/pages/test.html");
+    //res.sendFile(__dirname + "/views/pages/test.html");
+    res.render('pages/homepage');
 });
 
 
@@ -104,6 +108,7 @@ app.get('/callback', async function(req, res) {
     const accessToken = tokens.access_token;
     const refreshToken = tokens.refresh_token;
 
+
     //save access_token in session
     //save refresh_token in session
     req.session.access_token = accessToken;
@@ -133,6 +138,7 @@ app.get('/refreshToken', async (req,res) => {
   }
 });
 
+
 //non-auth spotify api calls:
 app.get('/topArtist', async (req,res) => {
 
@@ -140,7 +146,7 @@ app.get('/topArtist', async (req,res) => {
 
   spotifyCall.getTopArtists(savedToken)
   .then(results => {
-    res.render('pages/test', {
+    res.render('pages/artists', {
       data: results
     });
   })
