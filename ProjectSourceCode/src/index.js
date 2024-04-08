@@ -10,7 +10,7 @@ const path = require('path');
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
-//const bcrypt = require('bcrypt'); //  To hash passwords
+const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const { time } = require('console');
 
@@ -81,31 +81,63 @@ app.get('/welcome', (req, res) => {
 app.get('/register', (req, res) => { //register API(made in lab 11)
       res.render('pages/register');
   });
-  app.post('/register', async (req, res) => {
-      //hash the password using bcrypt library
-      const hash = await bcrypt.hash(req.body.password, 10);
-      const username = req.body.username;
 
-      var query = 'INSERT INTO users(username, password) VALUES ($1, $2) RETURNING *;';
-      // To-DO: Insert username and hashed password into the 'users' table
-      // db comand -defining user in here
-      db.one(query, [username, hash])
-      .then(data => {
-        user.username = username;
-        user.password = hash;
-        
-        console.log("Hey there")
-        req.session.user = user;
-        req.session.save();
+/*
+app.post('/register', async (req, res) => {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const username = req.body.username;
+    var query = 'INSERT INTO users(username, password) VALUES ($1, $2) RETURNING *;';
+    // To-DO: Insert username and hashed password into the 'users' table
+    // db comand -defining user in here
+    db.one(query, [username, hash])
+    .then(data => {
+      data.username = username;
+      data.password = hash;
+      
+      console.log("Hey there")// test: remove
+      req.session.user = user;
+      req.session.save();
+      res.redirect(200,'/login');
+    })
+    .catch(error => {
+      console.log('ERROR:', error.message || error);
+      //TEST FOR TESTS
+      res.redirect(400,'/register');
+    });
+});
+*/
 
-        //res.redirect('/login');
-      })
-      .catch(error => {
-        console.log('ERROR:', error.message || error);
-        res.redirect('/register');
-      });
 
-  });
+app.post('/register', async (req,res) => {
+  const username = req.body.username;
+  const hash = await bcrypt.hash(req.body.password,10);
+  //insert username and hashed password into table
+  //check if username already exists
+
+  if(hash.err){
+    console.log("BCRYPT ERROR")
+  }
+  else{
+    var query = `INSERT INTO users (username, password) VALUES ('${username}','${hash}') returning *;`;
+    db.one(query)
+    .then(() => {
+      res.status(200)
+      .render('pages/login', {
+        success: true,
+        message: "Account created, use credentials to login."
+      }, () => {res.json({message: "Account created, use credentials to login."})} )
+    })
+    .catch(() => {
+      res.status(400)
+      .render('pages/register', {
+        error: true,
+        message: "Username already associated with an account."
+      }, () => {res.json({message: "Username already associated with an account."})} )
+    })
+  }
+});
+
 
 // *****************************************************
 // <!-- Start Server-->

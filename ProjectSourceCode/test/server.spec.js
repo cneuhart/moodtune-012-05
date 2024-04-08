@@ -28,16 +28,19 @@ describe('Server!', () => {
 });
 
 // *********************** TODO: WRITE 2 UNIT TESTCASES **************************
+
+let testUsername = 'registerman' + Math.floor(Math.random() * 10000); //test a username with random 4 digit number, will not exist in db (kinda scuffed)
+
 //Positive test case
 describe('Testing Add User API', () => {
   it('positive : /register', done => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'registerman', password: 'password'})
+      .send({username: testUsername, password: 'password'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('Success');
+        expect(res.body.message).to.equals('Account created, use credentials to login.');
         done();
       });
   });
@@ -45,17 +48,17 @@ describe('Testing Add User API', () => {
 
 //Negitive test case
 describe('Testing Add User API', () => {
-  it('positive : /register', done => {
-    // Refer above for the positive testcase implementation
-  });
+  //it('positive : /register', done => {
+  //  // Refer above for the positive testcase implementation
+  //});
   it('Negative : /register. Checking invalid name', done => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'registerman', password: 'password'})
+      .send({username: testUsername, password: 'password'})
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.message).to.equals('Invalid input');
+        expect(res.body.message).to.equals('Username already associated with an account.');
         done();
       });
   });
