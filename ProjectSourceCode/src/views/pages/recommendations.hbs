@@ -1,0 +1,26 @@
+<h1>recommendations test</h1>
+
+<div id="tableDiv" class="p-3">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <th>track name</th>
+            <th>artist name</th>
+            <th>image</th>
+            <th></th>
+        </thead>
+        {{#each data.tracks}}
+
+            <tr>
+                <td>{{name}}</td>
+                <td>{{artists.[0].name}}</td>
+                <td>
+                    <img src="{{album.images.[0].url}}" width="90" height="90">
+                </td>
+                <td>
+
+                </td>
+            </tr>
+
+        {{/each}}
+    </table>
+    </div>

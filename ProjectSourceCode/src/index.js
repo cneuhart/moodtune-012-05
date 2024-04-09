@@ -257,6 +257,31 @@ app.get('/topTracks', async (req,res) => {
     
   });
 
+//test recommendations route
+app.get('/recommendations', async (req,res) => {
+ 
+
+  const savedToken = req.session.access_token;
+
+  const stringinputs = req.query.inputs;
+
+  const inputs = stringinputs.split(" ")
+  console.log(inputs)
+
+  spotifyCall.getTrackRecommendation(savedToken, inputs)
+  .then(results => {
+    console.log(results)
+    res.render('pages/recommendations',{
+      data: results
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error
+    })
+  });
+
+});
 
 
 //session testing route
