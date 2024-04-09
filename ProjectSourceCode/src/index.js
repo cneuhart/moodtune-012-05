@@ -82,6 +82,14 @@ app.get('/register', (req, res) => { //register API(made in lab 11)
       res.render('pages/register');
   });
 
+app.get('/login', (req, res) => {
+    res.render('pages/login');
+  });
+
+app.get('/homepage', (req, res) => {
+    res.render('pages/homepage');
+  });
+
 /*
 app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
@@ -134,6 +142,33 @@ app.post('/register', async (req,res) => {
   }
 });
 
+app.post('/login', async (req, res) => {
+  try {
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
+    // Check if a user with the provided username exists
+    if (user == null) {
+      // Username not found in the database
+      return res.status(400)
+      .render('pages/login', { message: 'Incorrect username or password.' });
+    }
+
+    // Compare the stored password with the password provided in the request
+    const match = await bcrypt.compare(req.body.password, user.password);
+
+    if (!match) {
+      // Incorrect password
+      return res.status(400)
+      .render('pages/login', { message: 'Incorrect username or password.' });
+    } else {
+      req.session.user = req.body.username;
+      req.session.save();
+
+      res.redirect('/homepage');
+    }
+  } catch (error) {
+    res.render('pages/login', { message: 'An error occured.' });
+  }
+});
 
 // *****************************************************
 // <!-- Start Server-->

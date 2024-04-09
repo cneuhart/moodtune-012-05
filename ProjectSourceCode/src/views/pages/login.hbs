@@ -1,1 +1,16 @@
-<h1>login</h1>
+<h1 class="p-3">Login</h1>
+{{> message}}
+  <form method="POST" action="/login" class="p-3">
+    <div class="form-group">
+        <label for="InputUsername">Username</label>
+        <input name="username" type="username" class="form-control" id="inputUsername" aria-describedby="usernameHelp" placeholder="Enter Username...">
+        <label for="inputPassword">Password</label>
+        <input name="password" type="inputPassword" class="form-control" id="inputEmail" aria-describedby="passwordHelp" placeholder="Enter Password...">
+    </div>
+    <div class="pt-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    <div class="p-3">
+      <p>Don't have an account? Click <a href='/register'>Register.</a> to Register.</p>
+    </div>
+</form>
