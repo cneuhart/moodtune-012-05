@@ -163,7 +163,7 @@ app.post('/login', async (req, res) => {
       req.session.user = req.body.username;
       req.session.save();
 
-      res.redirect('/homepage');
+      res.redirect(200, '/homepage');
     }
   } catch (error) {
     res.render('pages/login', { message: 'An error occured.' });

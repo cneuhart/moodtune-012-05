@@ -63,4 +63,35 @@ describe('Testing Add User API', () => {
       });
   });
 });
+
+// *********************** TWO MORE UNIT TESTCASES **************************
+
+//Positive test case
+describe('Testing Login API', () => {
+  it('positive : /Login', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({username: testUsername, password: 'password'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+});
+
+//Negitive test case
+describe('Testing Login API', () => {
+  it('Negative : /Login. Checking invalid password', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({username: testUsername, password: 'wrong password'})
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
+});
+
 // ********************************************************************************
