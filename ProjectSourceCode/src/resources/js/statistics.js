@@ -2,12 +2,12 @@
 
 const spotifyCall = require("./spotifyCall");
 
-/*
-async function getArtistStats(){
-    spotifyCall.getTopArtists(savedToken, time_range)
+
+async function getTracksStats(){
+    spotifyCall.getTopTracks(savedToken, time_range)
   .then(results => {
     res.render('pages/statistics', {
-      artistdata: results
+      data: results
     });
   })
   .catch(error => {
@@ -17,4 +17,5 @@ async function getArtistStats(){
   });
 
 }
-*/
+
+

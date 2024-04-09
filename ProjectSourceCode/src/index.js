@@ -231,10 +231,32 @@ app.get('/topTracks', async (req,res) => {
   app.get('/statistics', async (req,res) => {
 
     const savedToken = req.session.access_token;
+
+    const time_range = req.query.time_range;
   
-    //lazy-loading: call API only when elements are clicked on stats page; update info into DB at same time
+      spotifyCall.getTopTracks(savedToken, time_range)
+    .then(trackResult => {
+      spotifyCall.getTopArtists(savedToken, time_range)
+      .then(artistResult => {
+        res.render('pages/statistics', {
+          trackdata: trackResult,
+          artistdata: artistResult
+        });
+      })
+      .catch(error => {
+        res.status('500').json({
+          error: error
+        })
+      });
+    })
+    .catch(error => {
+      res.status('500').json({
+        error: error
+      })
+    });
     
   });
+
 
 
 //session testing route

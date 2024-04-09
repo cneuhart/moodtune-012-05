@@ -6,6 +6,16 @@
 
 <h1>Artists header</h1>
 
+<form method="GET" action="/statistics">
+    <label>statistics</label>
+    <select name="time_range" id="time_range">
+        <option value="short_term">short</option>
+        <option value="medium_term">medium</option>
+        <option value="long_term">long</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Artists</button>

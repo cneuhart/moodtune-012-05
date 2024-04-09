@@ -40,6 +40,16 @@
     <input type="submit" value="Submit">
 </form>
 
+<form method="GET" action="/statistics">
+    <label>statistics</label>
+    <select name="time_range" id="time_range">
+        <option value="short_term">short</option>
+        <option value="medium_term">medium</option>
+        <option value="long_term">long</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
 <form method="GET" action="/refreshToken">
     <label>REFRESH TOKEN</label>
     <input type="submit" value="Submit">
