@@ -133,7 +133,7 @@ app.post('/register', async (req,res) => {
     var query = `INSERT INTO users (username, password) VALUES ('${username}','${hash}') returning *;`;
     db.one(query)
     .then(() => {
-      res.redirect(200,'pages/login')
+      res.redirect(200,'/login')
     })
     .catch(() => {
       res.status(400)
