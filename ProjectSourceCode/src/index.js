@@ -150,14 +150,18 @@ app.post('/login', async (req, res) => {
     } else {
       req.session.user = req.body.username;
       req.session.save();
-
-      res.redirect(200, '/homepage');
+      res.status(200)
+      res.redirect('/homepage');
     }
   } catch (error) {
     res.render('pages/login', { message: 'An error occured.' });
   }
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout', {message: 'Logged out Successfully'});
+});
 
 //spotify authentication routes
   //spotify login/auth
