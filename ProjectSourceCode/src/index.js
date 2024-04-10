@@ -17,6 +17,9 @@ const { time } = require('console');
 //lets us use relative pathing when using files (rather than only absolute)
 app.use(express.static(__dirname + '/'));
 
+const publicPath = path.resolve(__dirname, "public");
+app.use(express.static(publicPath));
+
 
 const hbs = handlebars.create({
     extname: 'hbs',
