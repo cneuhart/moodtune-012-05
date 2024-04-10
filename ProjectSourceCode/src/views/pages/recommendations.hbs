@@ -1,26 +1,27 @@
-<h1>recommendations test</h1>
-
+<h1>Recommended Songs</h1>
 <div id="tableDiv" class="p-3">
-    <table class="table table-striped table-bordered">
+    {{> message}}
+    <table class="table">
         <thead>
-            <th>track name</th>
-            <th>artist name</th>
-            <th>image</th>
-            <th></th>
-        </thead>
-        {{#each data.tracks}}
-
-            <tr>
-                <td>{{name}}</td>
-                <td>{{artists.[0].name}}</td>
-                <td>
-                    <img src="{{album.images.[0].url}}" width="90" height="90">
-                </td>
-                <td>
-
-                </td>
+            {{!-- <label for="reccomendations">Recommened Songs</label> --}}
+            {{!-- based on user input, bring up spotify songs with the same API calls --}}
+            <tr> {{! Song format}}
+                <th scope='col'>track name</th>
+                <th scope='col'>artist name</th>
+                <th scope='col'>image</th>
+                {{!-- <th scope='col'>album</th> --}}
             </tr>
-
-        {{/each}}
+        </thead>
+        <tbody>
+            {{#each data.tracks}}
+            {{!Call command from spotifyCall.js in Stats branch}}
+                <tr> {{!Display the reccomended songs}}
+                    <td>{{ name }}</td>
+                    <td><img src="{{album.images.[0].url}}" width="90" height="90"></td>
+                    <td>{{ artists.[0].name }}</td>
+                    {{!-- <td>{{ album }}</td> --}}
+                </tr>
+            {{/each}}
+        </tbody>
     </table>
-    </div>
+</div>
