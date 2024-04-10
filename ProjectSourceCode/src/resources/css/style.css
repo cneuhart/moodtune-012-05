@@ -3,3 +3,29 @@ body {
     background-size: cover;
 }
 
+.center {
+    border: 5px solid;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
+
+.card {
+    width:30%; 
+    height:60%
+}
+
+.card-title {
+    padding-top:15px;
+    font-weight:bold;
+}
+
+button {
+    width:125px;
+    height:auto;
+}
+
+.card-footer {
+    padding-top:10000px;
+}
+
