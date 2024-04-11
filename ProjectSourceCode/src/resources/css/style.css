@@ -20,12 +20,21 @@ body {
     font-weight:bold;
 }
 
-button {
-    width:125px;
-    height:auto;
-}
 
 .card-footer {
     padding-top:10000px;
+}
+
+button {
+    font-weight: bold;
+    
+    border:white;
+    color:black;
+    width:125px;
+    height:auto;
+
+    background-image: url(../img/background.jpeg);
+    background-size: cover;
+    
 }
 
