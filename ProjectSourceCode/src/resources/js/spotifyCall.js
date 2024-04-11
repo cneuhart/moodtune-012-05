@@ -56,8 +56,6 @@ module.exports.getTrackRecommendation = async function getTrackRecommendation(sa
 
     let finalQuery = genres
 
-    console.log(inputs.length)
-
     for(let i = 0; i < inputs.length; i++){
         if(i == 0){
             finalQuery += inputs[i]
