@@ -17,6 +17,7 @@ body {
 
 .card-title {
     padding-top:15px;
+    margin-top:0.5em;
     font-weight:bold;
 }
 
@@ -25,16 +26,14 @@ body {
     padding-top:10000px;
 }
 
-button {
-    font-weight: bold;
-    
-    border:white;
-    color:black;
-    width:125px;
-    height:auto;
-
-    background-image: url(../img/background.jpeg);
+.btn {
+    background-color:black;
     background-size: cover;
-    
+    width:85%;
+    margin-top:2em;
+}
+
+.bold {
+    font-weight: bold;
 }
 
