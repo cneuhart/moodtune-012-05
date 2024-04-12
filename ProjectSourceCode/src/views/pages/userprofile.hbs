@@ -1,16 +1,61 @@
 <h1>User Profile</h1>
 
 <!-- Username Input Field -->
-<label for = "username">Username:</label>
-<input type="text" id="username" name="username" placeholder="Enter your username">
+<label for = "username">Username: {{ username }}</label>
+
+<!-- Form for changing username -->
+<form method="POST" action="/userprofile/change-username">
+    <label for="newUsername">New Username:</label>
+    <input type="text" id="newUsername" name="newUsername" placeholder="Enter your new username">
+    <button type="submit">Change Username</button>
+</form>
+
+{{!-- {{Profile Picture}} --}}
+
+<!-- Profile Picture Input -->
+<label for="profilePicture">Profile Picture:</label>
+<input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+
+<!-- Image Preview -->
+<div id="profilePictureContainer" style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
+    <img id="profilePicturePreview" src="#" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
+<script>
+    // Function to display selected profile picture
+    function displayProfilePicture(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const profilePicturePreview = document.getElementById('profilePicturePreview');
+                profilePicturePreview.src = e.target.result;
+                profilePicturePreview.style.display = 'block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Add event listener to profile picture input
+    const profilePictureInput = document.getElementById('profilePictureInput');
+    profilePictureInput.addEventListener('change', displayProfilePicture);
+    
+</script>
+
+
+
+
+
+
+
+
+
 
 {{!-- {{Bio/About Me}} --}}
 <label for = "About Me">About Me:</label>
 <textarea id="About Me" name="About Me" placeholder="Write something about yourself"></textarea>
-
-{{!-- {{Profile Picture?}} --}}
-<label for="profilePicture">Profile Picture:</label>
-<input type="file" id="profilePicture" name="profilePicture">
 
 {{!-- {{Previous Recommendations}} --}}
 <script>
