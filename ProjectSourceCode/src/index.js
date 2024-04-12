@@ -168,7 +168,7 @@ app.get('/logout', (req, res) => {
   app.get('/spotifylogin', (req,res) => {
     var state = 123456789123456; //should be randomly generated number (16)
     //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
-    var scope = 'user-read-private user-read-email user-top-read';
+    var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private playlist-modify-public playlist-modify-private';
   
     var authJSON = {
       response_type: 'code',
@@ -298,10 +298,9 @@ app.get('/logout', (req, res) => {
       
     });
   
-  //test recommendations route
+  //recommendations route
   app.get('/recommendations', async (req,res) => {
    
-  
     const savedToken = req.session.access_token;
   
     const stringinputs = req.query.inputs;
@@ -310,6 +309,36 @@ app.get('/logout', (req, res) => {
   
     spotifyCall.getTrackRecommendation(savedToken, inputs)
     .then(results => {
+      res.render('pages/recommendations',{
+        data: results
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error
+      })
+    });
+  
+  });
+
+  //recommendations POST route; create recommended playlist
+  app.get('/recommendations', async (req,res) => {
+
+    const savedToken = req.session.access_token;
+  
+    const recommendedTracksDirty = req.query.spotifyURIs;
+    let recommendedTracks = "";
+    if(recommendedTracksDirty.slice(-1) == ','){ //if last character of recommendedTracks string is comma
+      recommendedTracks = recommendedTracksDirty.slice(0, -1); //removes erroneous comma from form's post request
+    }
+    else{
+      recommendedTracks = recommendedTracksDirty;
+    }
+  
+    const genreInput = req.query.genreInput;
+
+    spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
+    .then(results => { //where to redirect????????????
       res.render('pages/recommendations',{
         data: results
       })

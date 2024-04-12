@@ -1,4 +1,10 @@
 <h1>Recommended Songs</h1>
+
+<form method="POST" action="/recommendations">
+    <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
+    <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+</form>
+
 <div id="tableDiv" class="p-3">
     {{> message}}
     <table class="table">
@@ -9,6 +15,7 @@
                 <th scope='col'>track name</th>
                 <th scope='col'>artist name</th>
                 <th scope='col'>image</th>
+                <th>URI</th>
                 {{!-- <th scope='col'>album</th> --}}
             </tr>
         </thead>
@@ -19,6 +26,7 @@
                     <td>{{ name }}</td>
                     <td><img src="{{album.images.[0].url}}" width="90" height="90"></td>
                     <td>{{ artists.[0].name }}</td>
+                    <td>{{ uri }}</td>
                     {{!-- <td>{{ album }}</td> --}}
                 </tr>
             {{/each}}
