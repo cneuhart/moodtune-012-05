@@ -10,38 +10,69 @@
     <button type="submit">Change Username</button>
 </form>
 
+
+
 {{!-- {{Profile Picture}} --}}
+<label for="profilePicture">Profile Picture (use a screenshot):</label>
+<input type="file" id="profilePicture" accept="image/png">
 
-<!-- Profile Picture Input -->
-<label for="profilePicture">Profile Picture:</label>
-<input type="file" id="profilePictureInput" name="profilePicture" accept="image/*">
+<img id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
 
-<!-- Image Preview -->
-<div id="profilePictureContainer" style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
-    <img id="profilePicturePreview" src="#" alt="" style="width: 100%; height: 100%; object-fit: cover;">
-</div>
+<button onclick="uploadProfilePicture()">Upload</button>
 
 <script>
-    // Function to display selected profile picture
-    function displayProfilePicture(event) {
-        const input = event.target;
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
+function uploadProfilePicture() {
+    var input = document.getElementById('profilePicture');
+    var file = input.files[0];
 
+    if (file) {
+        if (file.type === 'image/png') {
+            var reader = new FileReader();
             reader.onload = function(e) {
-                const profilePicturePreview = document.getElementById('profilePicturePreview');
-                profilePicturePreview.src = e.target.result;
-                profilePicturePreview.style.display = 'block';
-            }
+                var uploadedImage = document.getElementById('uploadedImage');
+                uploadedImage.src = e.target.result;
+                uploadedImage.style.display = 'block';
 
-            reader.readAsDataURL(input.files[0]);
+                localStorage.setItem('profilePicture', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please upload a PNG image.');
         }
+    } else {
+        alert('Please select a file to upload.');
     }
+}
 
-    // Add event listener to profile picture input
-    const profilePictureInput = document.getElementById('profilePictureInput');
-    profilePictureInput.addEventListener('change', displayProfilePicture);
-    
+window.addEventListener('DOMContentLoaded', function() {
+    var uploadedImage = document.getElementById('uploadedImage');
+    if (localStorage.getItem('profilePicture')) {
+        uploadedImage.src = localStorage.getItem('profilePicture');
+        uploadedImage.style.display = 'block';
+    }
+});
+</script>
+
+
+
+{{!-- {{Bio/About Me}} --}}
+<label for="AboutMe">About Me:</label>
+<textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
+
+<button onclick="publishAboutMe()">Publish</button>
+
+<script>
+function publishAboutMe() {
+    var aboutMeContent = document.getElementById('AboutMe').value;
+    localStorage.setItem('aboutMeText', aboutMeContent);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    var aboutMeTextarea = document.getElementById('AboutMe');
+    if (localStorage.getItem('aboutMeText')) {
+        aboutMeTextarea.value = localStorage.getItem('aboutMeText');
+    }
+});
 </script>
 
 
@@ -53,9 +84,13 @@
 
 
 
-{{!-- {{Bio/About Me}} --}}
-<label for = "About Me">About Me:</label>
-<textarea id="About Me" name="About Me" placeholder="Write something about yourself"></textarea>
+
+
+
+
+
+
+
 
 {{!-- {{Previous Recommendations}} --}}
 <script>
