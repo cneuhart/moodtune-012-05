@@ -168,7 +168,7 @@ app.get('/logout', (req, res) => {
   app.get('/spotifylogin', (req,res) => {
     var state = 123456789123456; //should be randomly generated number (16)
     //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
-    var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private playlist-modify-public playlist-modify-private';
+    var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private';
   
     var authJSON = {
       response_type: 'code',
@@ -322,11 +322,17 @@ app.get('/logout', (req, res) => {
   });
 
   //recommendations POST route; create recommended playlist
-  app.get('/recommendations', async (req,res) => {
+  app.post('/recommendations', async (req,res) => {
+
+    if(req.body.spotifyURIs == undefined){
+      res.status(400).render('pages/homepage')
+      return 0;
+      //should send an error message when rendering homepage (use handlebars)
+    }
 
     const savedToken = req.session.access_token;
-  
-    const recommendedTracksDirty = req.query.spotifyURIs;
+
+    const recommendedTracksDirty = req.body.spotifyURIs;
     let recommendedTracks = "";
     if(recommendedTracksDirty.slice(-1) == ','){ //if last character of recommendedTracks string is comma
       recommendedTracks = recommendedTracksDirty.slice(0, -1); //removes erroneous comma from form's post request
@@ -335,15 +341,19 @@ app.get('/logout', (req, res) => {
       recommendedTracks = recommendedTracksDirty;
     }
   
-    const genreInput = req.query.genreInput;
+    const genreInput = "TEST GENRE";
+    //const genreInput = req.query.genreInput;
 
     spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
     .then(results => { //where to redirect????????????
+      res.json(results)
+      return 0;
       res.render('pages/recommendations',{
         data: results
       })
     })
     .catch(error => {
+      console.log("ERROR")
       res.status(500).json({
         error: error
       })
