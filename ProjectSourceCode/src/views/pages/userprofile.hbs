@@ -16,7 +16,7 @@
 <script>
     // Function to fetch and display user's previous recommendations
     function fetchAndDisplayRecommendations() {
-        // Fetch user's previous recommendations from the server
+        // Fetch user's previous recommendations from the database
         fetch('/pages/recommendations')
             .then(response => response.json())
             .then(data => {
