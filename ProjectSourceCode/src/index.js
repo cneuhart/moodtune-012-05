@@ -346,8 +346,6 @@ app.get('/logout', (req, res) => {
 
     spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
     .then(results => { //where to redirect????????????
-      res.json(results)
-      return 0;
       res.render('pages/recommendations',{
         data: results
       })
