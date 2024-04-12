@@ -13,6 +13,29 @@
 <input type="file" id="profilePicture" name="profilePicture">
 
 {{!-- {{Previous Recommendations}} --}}
+<script>
+    // Function to fetch and display user's previous recommendations
+    function fetchAndDisplayRecommendations() {
+        // Fetch user's previous recommendations from the server
+        fetch('/pages/recommendations')
+            .then(response => response.json())
+            .then(data => {
+                // Display recommendations
+                const previousRecommendations = document.getElementById('previousRecommendations');
+                data.forEach(recommendation => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${recommendation.track_name} by ${recommendation.artist_name}`;
+                    previousRecommendations.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching recommendations:', error);
+            });
+    }
+
+    // Call fetchAndDisplayRecommendations function when the page loads
+    window.addEventListener('DOMContentLoaded', fetchAndDisplayRecommendations);
+</script>
 
 {{!-- {{Settings}} --}}
     {{!-- {{Filter Recommendations}} --}}
