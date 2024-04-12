@@ -310,7 +310,8 @@ app.get('/logout', (req, res) => {
     spotifyCall.getTrackRecommendation(savedToken, inputs)
     .then(results => {
       res.render('pages/recommendations',{
-        data: results
+        data: results,
+        inputText: stringinputs
       })
     })
     .catch(error => {
@@ -341,13 +342,11 @@ app.get('/logout', (req, res) => {
       recommendedTracks = recommendedTracksDirty;
     }
   
-    const genreInput = "TEST GENRE";
+    const genreInput = req.body.inputText;
     //const genreInput = req.query.genreInput;
 
     spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
     .then(results => { //where to redirect????????????
-      console.log("result:")
-      console.log(results)
       res.render('pages/recommendations',{
         data: results
       })

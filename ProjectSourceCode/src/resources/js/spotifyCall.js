@@ -110,7 +110,7 @@ async function createEmptyPlaylist(savedToken, userID, genreInput){
             'Authorization': 'Bearer ' + savedToken,
             'Content-Type': 'application/json' 
         },
-        body: JSON.stringify({ name: "New Playlist" })
+        body: JSON.stringify({ name: `${genreInput}`, description: `${genreInput} playlist created by moodtune`})
     })
 
     return createdPlaylist.json()
