@@ -85,8 +85,17 @@ app.use(
 
 //api routes
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+
+  //TEST IF USER IS LOGGED IN
+    //!should probably send an error message to login page on redirect
+  if(await LoginTest(req) == false){
+    res.status(400).redirect('/login')
+    return 0;
+  }
+
   res.render('pages/homepage');
+
 });
 
 app.get('/welcome', (req, res) => {
@@ -131,6 +140,7 @@ app.post('/register', async (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
+
   try {
     const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
     // Check if a user with the provided username exists
@@ -149,9 +159,12 @@ app.post('/login', async (req, res) => {
       .render('pages/login', { message: 'Incorrect username or password.' });
     } else {
       req.session.user = req.body.username;
+      req.session.password = req.body.password;
       req.session.save();
       res.status(200)
-      res.redirect('/homepage');
+      //redirect to spotifylogin route, not just homepage
+        //res.redirect('/homepage');
+      res.redirect('/spotifylogin')
     }
   } catch (error) {
     res.render('pages/login', { message: 'An error occured.' });
@@ -345,8 +358,10 @@ app.get('/logout', (req, res) => {
 
 
   async function LoginTest(req){
+
     try {
-      const user = await db.oneOrNone(`SELECT * FROM users WHERE username = ${req.body.username};`);
+      const user = await db.oneOrNone(`SELECT * FROM users WHERE username = '${req.session.user}';`);
+
       // Check if a user with the provided username exists\
       if (user == null) {
         // if username not found in the database, return false
@@ -354,8 +369,8 @@ app.get('/logout', (req, res) => {
       }
   
       // Compare the stored password with the password provided in the request
-      const match = await bcrypt.compare(req.body.password, user.password);
-  
+      const match = await bcrypt.compare(req.session.password, user.password);
+
       if (!match) {
         // Incorrect Login
         return false;
@@ -383,13 +398,13 @@ app.get('/logout', (req, res) => {
       let recommended_for_result = recommended_for;
       let genreInput_result = genreInput
 
-      trackName = trackName.replace('\'','\'\'')
-      artist = artist.replace('\'','\'\'')
-      album_url = album_url.replace('\'','\'\'')
-      uri = uri.replace('\'','\'\'')
-      recommended_for_result = recommended_for_result.replace('\'','\'\'')
-      genreInput_result = genreInput_result.replace('\'','\'\'')
-      
+      trackName = trackName.replace(/\'/g,'\'\'')
+      artist = artist.replace(/\'/g,'\'\'')
+      album_url = album_url.replace(/\'/g,'\'\'')
+      uri = uri.replace(/\'/g,'\'\'')
+      recommended_for_result = recommended_for_result.replace(/\'/g,'\'\'')
+      genreInput_result = genreInput_result.replace(/\'/g,'\'\'')
+
       appendQuery = appendQuery.concat("(")
       appendQuery = appendQuery.concat(`'${trackName}'` + ",")
       appendQuery = appendQuery.concat(`'${artist}'` + ",")
