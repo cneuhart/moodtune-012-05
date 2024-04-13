@@ -83,6 +83,36 @@ app.use(
 );
   
 
+
+//login test function (prevent routes from executing if not logged in, must have LoginTest func + res statement inside route)
+async function LoginTest(req){
+
+  try {
+    const user = await db.oneOrNone(`SELECT * FROM users WHERE username = '${req.session.user}';`);
+
+    // Check if a user with the provided username exists\
+    if (user == null) {
+      // if username not found in the database, return false
+      return false;
+    }
+
+    // Compare the stored password with the password provided in the request
+    const match = await bcrypt.compare(req.session.password, user.password);
+
+    if (!match) {
+      // Incorrect Login
+      return false;
+    } else {
+      //Correct Login
+      return true;
+    }
+  } catch (error) {
+    //return incorrect login (false) in case of error
+    return false;
+  }
+
+}
+
 //api routes
 
 app.get('/', async (req, res) => {
@@ -356,34 +386,6 @@ app.get('/logout', (req, res) => {
   
   });
 
-
-  async function LoginTest(req){
-
-    try {
-      const user = await db.oneOrNone(`SELECT * FROM users WHERE username = '${req.session.user}';`);
-
-      // Check if a user with the provided username exists\
-      if (user == null) {
-        // if username not found in the database, return false
-        return false;
-      }
-  
-      // Compare the stored password with the password provided in the request
-      const match = await bcrypt.compare(req.session.password, user.password);
-
-      if (!match) {
-        // Incorrect Login
-        return false;
-      } else {
-        //Correct Login
-        return true;
-      }
-    } catch (error) {
-      //return incorrect login (false) in case of error
-      return false;
-    }
-
-  }
 
   async function storeRecommendations(recommended_for, results, genreInput){
 
