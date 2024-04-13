@@ -165,7 +165,15 @@ app.get('/logout', (req, res) => {
 
 //spotify authentication routes
   //spotify login/auth
-  app.get('/spotifylogin', (req,res) => {
+  app.get('/spotifylogin', async (req,res) => {
+
+  //TEST IF USER IS LOGGED IN
+    //!should probably send an error message to login page on redirect
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
+
     var state = 123456789123456; //!should be randomly generated number (16)
     //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
     var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private';
@@ -306,6 +314,7 @@ app.get('/logout', (req, res) => {
       //!should probably send an error message to login page on redirect
     if(await LoginTest(req) == false){
       res.status(400).redirect('/login')
+      return 0;
     }
 
     const savedToken = req.session.access_token;
