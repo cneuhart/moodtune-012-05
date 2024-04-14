@@ -124,7 +124,35 @@ app.get('/', async (req, res) => {
     return 0;
   }
 
-  res.render('pages/homepage');
+  //loading page without user requesting recommendation with inputs
+  if(req.query.inputs == undefined){
+    res.render("pages/homepage")
+    return 0;
+  }
+
+  const savedToken = req.session.access_token;
+  
+  const stringinputs = req.query.inputs;
+
+  const inputs = stringinputs.split(" ")
+
+  spotifyCall.getTrackRecommendation(savedToken, inputs)
+  .then(results => {
+    //store recommendations in db
+    //do not need to await, recommendations showing on page does not depend on DB entry
+    storeRecommendations(req.session.user, results, stringinputs);
+
+    //render page with generated recommendations
+    res.render('pages/homepage',{
+      data: results,
+      inputText: stringinputs
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error
+    })
+  });
 
 });
 
@@ -348,7 +376,8 @@ app.get('/logout', (req, res) => {
       });
       
     });
-  
+
+/*
   //recommendations route
   app.get('/recommendations', async (req,res) => {
    
@@ -386,7 +415,7 @@ app.get('/logout', (req, res) => {
   
   });
 
-
+*/
   async function storeRecommendations(recommended_for, results, genreInput){
 
     let appendQuery = "";
