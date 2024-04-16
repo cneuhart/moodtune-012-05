@@ -418,6 +418,10 @@ app.get('/logout', (req, res) => {
 */
   async function storeRecommendations(recommended_for, results, genreInput){
 
+    if(results.tracks == undefined){
+      return 0;
+    }
+
     let appendQuery = "";
 
     for(let track in results.tracks){
