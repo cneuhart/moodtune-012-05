@@ -74,3 +74,63 @@ module.exports.getTrackRecommendation = async function getTrackRecommendation(sa
 
     return await result.json();
 }
+
+
+module.exports.createRecommendedPlaylist = async function createRecommendedPlaylist(savedToken, recommendedTracks, genreInput){
+
+    const user = await getUserID(savedToken);
+
+    const createdPlaylist = await createEmptyPlaylist(savedToken, user.id, genreInput);
+
+    const populatedPlaylist = await populatePlaylist(savedToken, recommendedTracks, createdPlaylist.id);
+
+    return populatedPlaylist;
+
+}
+
+
+async function getUserID(savedToken){
+
+    //get current user's profile:
+    let user = await fetch(`https://api.spotify.com/v1/me`, {
+        method: "GET",
+        headers: { 
+            'Authorization': 'Bearer ' + savedToken 
+        }
+    })
+
+    return user.json()
+}
+
+async function createEmptyPlaylist(savedToken, userID, genreInput){
+
+    let createdPlaylist = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+        method: "POST",
+        headers: { 
+            'Authorization': 'Bearer ' + savedToken,
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ name: `${genreInput}`, description: `${genreInput} playlist created by moodtune`})
+    })
+
+    return createdPlaylist.json()
+}
+
+async function populatePlaylist(savedToken, recommendedTracks, playlist_id){
+
+    //replace colon characters wil %3A url code
+    const trackURIs = recommendedTracks.replace(":","%3A")
+
+    let populatedPlaylist = await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?uris=${trackURIs}`, {
+        method: "POST",
+        headers: { 
+            'Authorization': 'Bearer ' + savedToken,
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ uris: "string", position: 0 })
+    })
+
+    //returns snapshot_id of playlist
+    return populatedPlaylist.json()
+}
+

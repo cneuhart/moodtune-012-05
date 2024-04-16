@@ -83,10 +83,77 @@ app.use(
 );
   
 
+
+//login test function (prevent routes from executing if not logged in, must have LoginTest func + res statement inside route)
+async function LoginTest(req){
+
+  try {
+    const user = await db.oneOrNone(`SELECT * FROM users WHERE username = '${req.session.user}';`);
+
+    // Check if a user with the provided username exists\
+    if (user == null) {
+      // if username not found in the database, return false
+      return false;
+    }
+
+    // Compare the stored password with the password provided in the request
+    const match = await bcrypt.compare(req.session.password, user.password);
+
+    if (!match) {
+      // Incorrect Login
+      return false;
+    } else {
+      //Correct Login
+      return true;
+    }
+  } catch (error) {
+    //return incorrect login (false) in case of error
+    return false;
+  }
+
+}
+
 //api routes
 
-app.get('/', (req, res) => {
-  res.render('pages/homepage');
+app.get('/', async (req, res) => {
+
+  //TEST IF USER IS LOGGED IN
+    //!should probably send an error message to login page on redirect
+  if(await LoginTest(req) == false){
+    res.status(400).redirect('/login')
+    return 0;
+  }
+
+  //loading page without user requesting recommendation with inputs
+  if(req.query.inputs == undefined){
+    res.render("pages/homepage")
+    return 0;
+  }
+
+  const savedToken = req.session.access_token;
+  
+  const stringinputs = req.query.inputs;
+
+  const inputs = stringinputs.split(" ")
+
+  spotifyCall.getTrackRecommendation(savedToken, inputs)
+  .then(results => {
+    //store recommendations in db
+    //do not need to await, recommendations showing on page does not depend on DB entry
+    storeRecommendations(req.session.user, results, stringinputs);
+
+    //render page with generated recommendations
+    res.render('pages/homepage',{
+      data: results,
+      inputText: stringinputs
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: error
+    })
+  });
+
 });
 
 app.get('/welcome', (req, res) => {
@@ -135,6 +202,7 @@ app.post('/register', async (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
+
   try {
     const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
     // Check if a user with the provided username exists
@@ -153,9 +221,12 @@ app.post('/login', async (req, res) => {
       .render('pages/login', { message: 'Incorrect username or password.' });
     } else {
       req.session.user = req.body.username;
+      req.session.password = req.body.password;
       req.session.save();
       res.status(200)
-      res.redirect('/homepage');
+      //redirect to spotifylogin route, not just homepage
+        //res.redirect('/homepage');
+      res.redirect('/spotifylogin')
     }
   } catch (error) {
     res.render('pages/login', { message: 'An error occured.' });
@@ -169,10 +240,18 @@ app.get('/logout', (req, res) => {
 
 //spotify authentication routes
   //spotify login/auth
-  app.get('/spotifylogin', (req,res) => {
-    var state = 123456789123456; //should be randomly generated number (16)
+  app.get('/spotifylogin', async (req,res) => {
+
+  //TEST IF USER IS LOGGED IN
+    //!should probably send an error message to login page on redirect
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
+
+    var state = 123456789123456; //!should be randomly generated number (16)
     //SCOPE: what the application is able to do/read with the user's account, if getting out of scope error make sure request is in bounds of what scope allows (or add new scope to increase what we can grab)
-    var scope = 'user-read-private user-read-email user-top-read';
+    var scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private';
   
     var authJSON = {
       response_type: 'code',
@@ -301,11 +380,19 @@ app.get('/logout', (req, res) => {
       });
       
     });
-  
-  //test recommendations route
+
+/*
+  //recommendations route
   app.get('/recommendations', async (req,res) => {
    
-  
+
+    //TEST IF USER IS LOGGED IN
+      //!should probably send an error message to login page on redirect
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
+
     const savedToken = req.session.access_token;
   
     const stringinputs = req.query.inputs;
@@ -314,8 +401,96 @@ app.get('/logout', (req, res) => {
   
     spotifyCall.getTrackRecommendation(savedToken, inputs)
     .then(results => {
+      //store recommendations in db
+      //do not need to await, recommendations showing on page does not depend on DB entry
+      storeRecommendations(req.session.user, results, stringinputs);
+
+      //render page with generated recommendations
       res.render('pages/recommendations',{
-        data: results
+        data: results,
+        inputText: stringinputs
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error
+      })
+    });
+  
+  });
+
+*/
+  async function storeRecommendations(recommended_for, results, genreInput){
+
+    if(results.tracks == undefined){
+      return 0;
+    }
+
+    let appendQuery = "";
+
+    for(let track in results.tracks){
+
+      let trackName = results.tracks[track].name
+      let artist = results.tracks[track].artists[0].name
+      let album_url = results.tracks[track].album.images[0].url
+      let uri = results.tracks[track].uri
+      let recommended_for_result = recommended_for;
+      let genreInput_result = genreInput
+
+      trackName = trackName.replace(/\'/g,'\'\'')
+      artist = artist.replace(/\'/g,'\'\'')
+      album_url = album_url.replace(/\'/g,'\'\'')
+      uri = uri.replace(/\'/g,'\'\'')
+      recommended_for_result = recommended_for_result.replace(/\'/g,'\'\'')
+      genreInput_result = genreInput_result.replace(/\'/g,'\'\'')
+
+      appendQuery = appendQuery.concat("(")
+      appendQuery = appendQuery.concat(`'${trackName}'` + ",")
+      appendQuery = appendQuery.concat(`'${artist}'` + ",")
+      appendQuery = appendQuery.concat(`'${album_url}'` + ",")
+      appendQuery = appendQuery.concat(`'${uri}'` + ",")
+      appendQuery = appendQuery.concat(`'${recommended_for_result}'` + ",")
+      appendQuery = appendQuery.concat(`'${genreInput_result}'`)
+      appendQuery = appendQuery.concat("),")
+    }
+
+    
+    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+    insertQuery = insertQuery.concat(appendQuery);
+    insertQuery = insertQuery.slice(0,-1) + ';';
+
+    db.any(insertQuery)
+
+  }
+
+  //recommendations POST route; create recommended playlist
+  app.post('/recommendations', async (req,res) => {
+
+    if(req.body.spotifyURIs == undefined){
+      res.status(400).render('pages/homepage')
+      return 0;
+      //!should send an error message when rendering homepage (use handlebars)
+    }
+
+    const savedToken = req.session.access_token;
+
+    const recommendedTracksDirty = req.body.spotifyURIs;
+    let recommendedTracks = "";
+    if(recommendedTracksDirty.slice(-1) == ','){ //if last character of recommendedTracks string is comma
+      recommendedTracks = recommendedTracksDirty.slice(0, -1); //removes erroneous comma from form's post request
+    }
+    else{
+      recommendedTracks = recommendedTracksDirty;
+    }
+  
+    const genreInput = req.body.inputText;
+    //const genreInput = req.query.genreInput;
+
+    spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
+    .then(results => { //where to redirect? -> !should resolve with confirmation message that playlist was added.
+      res.render('pages/recommendations',{
+        message: "Playlist successfully added to Spotify account.",
+        snapshot: results
       })
     })
     .catch(error => {
