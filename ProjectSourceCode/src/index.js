@@ -168,11 +168,20 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
   });
 
-app.get('/homepage', (req, res) => {
+app.get('/homepage', async (req, res) => {
+  if(await LoginTest(req) == false){
+    res.status(400).redirect('/login')
+    return 0;
+  }
+
     res.render('pages/homepage');
   });
 
-  app.get('/userprofile', (req, res) => {
+  app.get('/userprofile', async (req, res) => {
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
     res.render('pages/userprofile');
   });
 
@@ -189,7 +198,8 @@ app.post('/register', async (req,res) => {
     var query = `INSERT INTO users (username, password) VALUES ('${username}','${hash}') returning *;`;
     db.one(query)
     .then(() => {
-      res.redirect(200,'/login')
+      res.status(200)
+      res.render('pages/login')
     })
     .catch(() => {
       res.status(400)
@@ -209,7 +219,7 @@ app.post('/login', async (req, res) => {
     if (user == null) {
       // Username not found in the database
       return res.status(400)
-      .render('pages/login', { message: 'Incorrect username or password.' });
+      .render('pages/login', { message: 'Incorrect username or password.', error: true });
     }
 
     // Compare the stored password with the password provided in the request
@@ -218,7 +228,7 @@ app.post('/login', async (req, res) => {
     if (!match) {
       // Incorrect password
       return res.status(400)
-      .render('pages/login', { message: 'Incorrect username or password.' });
+      .render('pages/login', { message: 'Incorrect username or password.', error: true  });
     } else {
       req.session.user = req.body.username;
       req.session.password = req.body.password;
@@ -229,13 +239,17 @@ app.post('/login', async (req, res) => {
       res.redirect('/spotifylogin')
     }
   } catch (error) {
-    res.render('pages/login', { message: 'An error occured.' });
+    res.render('pages/login', { message: 'An error occured.', error: true  });
   }
 });
 
-app.get('/logout', (req, res) => {
+app.get('/logout', async (req, res) => {
+  if(await LoginTest(req) == false){
+    res.status(400).redirect('/login')
+    return 0;
+  }
   req.session.destroy();
-  res.render('pages/logout', {message: 'Logged out Successfully'});
+  res.render('pages/login', {message: 'Logged out Successfully'});
 });
 
 //spotify authentication routes
@@ -258,7 +272,8 @@ app.get('/logout', (req, res) => {
       client_id: client_id,
       scope: scope,
       redirect_uri: redirect_uri,
-      state: state
+      state: state,
+      show_dialog: true
     };
   
     const authQuery = new URLSearchParams(authJSON).toString();
