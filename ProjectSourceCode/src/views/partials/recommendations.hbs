@@ -47,7 +47,7 @@
                             <th>track name</th>
                             <th>image</th>
                             <th>artist name</th>
-                            <th>URI</th>
+                            <th>album</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -61,7 +61,7 @@
                                 <td>{{ name }}</td>
                                 <td><img src="{{album.images.[0].url}}" width="90" height="90"></td>
                                 <td>{{ artists.[0].name }}</td>
-                                <td>{{ uri }}</td>
+                                <td>{{album.name}}</td>
                             </tr>
                         {{/each}}
                     </tbody>
