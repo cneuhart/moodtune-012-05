@@ -134,7 +134,7 @@ function sanitize(inputString){
 
 //take sanitized input and remove special characters, split string into separate words
 function saniRemove(inputString){
-  
+
 }
 
 //sanitize user input strings that will be input into DB queries
@@ -604,7 +604,7 @@ app.get('/logout', async (req, res) => {
   });
   
   //handle all unmatched urls
-  app.all('*', () => {
+  app.all('*', (req,res) => {
     res.redirect('/');
   })
 
