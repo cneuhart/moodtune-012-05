@@ -113,21 +113,18 @@ async function LoginTest(req){
 
 }
 
-let testString = "this is a split string t%st s?tring";
-console.log(sanitize(testString));
-
 //sanitize user input strings that will be input into DB queries (separates into array with sanitized input)
 function sanitize(inputString){
 
   let splitString = inputString.split(" ");
 
-  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',}
-  const regex = /[&<>"'/\\?%]/ig;
+  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',}
+  const regex = /[;&<>"'/\\?%]/ig;
 
   for(let i = splitString.length; i > 0; i--){
     if(splitString[i] != undefined){
       console.log(splitString[i])
-      splitString[i].replace(regex, (match)=>(regexMap[match]))
+      splitString[i] = splitString[i].replace(regex, (match)=>(regexMap[match]))
     }
   }
 
@@ -145,16 +142,16 @@ function saniRemove(inputString){
     if(returnString[i] == undefined){
       continue;
     }
-    returnString[i] = returnString[i].replace("&quot","");
-    returnString[i] = returnString[i].replace("&apst","");
-    returnString[i] = returnString[i].replace("&amp","");
-    returnString[i] = returnString[i].replace("&lt","");
-    returnString[i] = returnString[i].replace("&gt","");
-    returnString[i] = returnString[i].replace("&lt","");
-    returnString[i] = returnString[i].replace("&qm","");
-    returnString[i] = returnString[i].replace("&bs","");
-    returnString[i] = returnString[i].replace("&fs","");
-    returnString[i] = returnString[i].replace("&pcnt","");
+    returnString[i] = returnString[i].replace("&quot;","");
+    returnString[i] = returnString[i].replace("&apst;","");
+    returnString[i] = returnString[i].replace("&amp;","");
+    returnString[i] = returnString[i].replace("&lt;","");
+    returnString[i] = returnString[i].replace("&gt;","");
+    returnString[i] = returnString[i].replace("&lt;","");
+    returnString[i] = returnString[i].replace("&qm;","");
+    returnString[i] = returnString[i].replace("&bs;","");
+    returnString[i] = returnString[i].replace("&fs;","");
+    returnString[i] = returnString[i].replace("&pcnt;","");
   }
 
   return returnString;
