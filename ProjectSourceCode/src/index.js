@@ -125,16 +125,51 @@ async function LoginTest(req){
 
 }
 
-//sanitize user input strings that will be input into DB queries
+let testString = "this is a split string t%st s?tring";
+console.log(sanitize(testString));
+
+//sanitize user input strings that will be input into DB queries (separates into array with sanitized input)
 function sanitize(inputString){
+
+  let splitString = inputString.split(" ");
+
   const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',}
   const regex = /[&<>"'/\\?%]/ig;
-  return inputString.replace(regex, (match)=>(regexMap[match]))
+
+  for(let i = splitString.length; i > 0; i--){
+    if(splitString[i] != undefined){
+      console.log(splitString[i])
+      splitString[i].replace(regex, (match)=>(regexMap[match]))
+    }
+  }
+
+  
+  //return inputString.replace(regex, (match)=>(regexMap[match]))
+  return saniRemove(splitString)
 }
 
 //take sanitized input and remove special characters, split string into separate words
 function saniRemove(inputString){
 
+  let returnString = inputString;
+
+  for(let i = returnString.length; i > 0; i--){
+    if(returnString[i] == undefined){
+      continue;
+    }
+    returnString[i] = returnString[i].replace("&quot","");
+    returnString[i] = returnString[i].replace("&apst","");
+    returnString[i] = returnString[i].replace("&amp","");
+    returnString[i] = returnString[i].replace("&lt","");
+    returnString[i] = returnString[i].replace("&gt","");
+    returnString[i] = returnString[i].replace("&lt","");
+    returnString[i] = returnString[i].replace("&qm","");
+    returnString[i] = returnString[i].replace("&bs","");
+    returnString[i] = returnString[i].replace("&fs","");
+    returnString[i] = returnString[i].replace("&pcnt","");
+  }
+
+  return returnString;
 }
 
 //sanitize user input strings that will be input into DB queries
@@ -468,6 +503,11 @@ app.get('/logout', async (req, res) => {
   
   //user statistics route
     app.get('/statistics', async (req,res) => {
+
+      if(await LoginTest(req) == false){
+        res.status(400).redirect('/login')
+        return 0;
+      }
   
       const savedToken = req.session.access_token;
   
