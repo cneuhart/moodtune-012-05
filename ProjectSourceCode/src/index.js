@@ -154,19 +154,42 @@ function saniRemove(inputString){
     if(returnString[i] == undefined){
       continue;
     }
-    returnString[i] = returnString[i].replace("&quot;","");
-    returnString[i] = returnString[i].replace("&apst;","");
-    returnString[i] = returnString[i].replace("&amp;","");
-    returnString[i] = returnString[i].replace("&lt;","");
-    returnString[i] = returnString[i].replace("&gt;","");
-    returnString[i] = returnString[i].replace("&lt;","");
-    returnString[i] = returnString[i].replace("&qm;","");
-    returnString[i] = returnString[i].replace("&bs;","");
-    returnString[i] = returnString[i].replace("&fs;","");
-    returnString[i] = returnString[i].replace("&pcnt;","");
+    returnString[i] = returnString[i].replace(/&quot;/g,"");
+    returnString[i] = returnString[i].replace(/&apst;/g,"");
+    returnString[i] = returnString[i].replace(/&amp;/g,"");
+    returnString[i] = returnString[i].replace(/&lt;/g,"");
+    returnString[i] = returnString[i].replace(/&gt;/g,"");
+    returnString[i] = returnString[i].replace(/&lt;/g,"");
+    returnString[i] = returnString[i].replace(/&qm;/g,"");
+    returnString[i] = returnString[i].replace(/&bs;/g,"");
+    returnString[i] = returnString[i].replace(/&fs;/g,"");
+    returnString[i] = returnString[i].replace(/&pcnt;/g,"");
+    returnString[i] = returnString[i].replace(/&sc;/g,"");
   }
 
   return returnString;
+}
+
+//sanitize string input to store input string on DB
+function singleSanitize(inputString){
+
+  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',}
+  const regex = /[;&<>"'/\\?%]/ig;
+  inputString = inputString.replace(regex, (match)=>(regexMap[match]))
+
+  inputString = inputString.replace(/&quot;/g,"");
+  inputString = inputString.replace(/&apst;/g,"");
+  inputString = inputString.replace(/&amp;/g,"");
+  inputString = inputString.replace(/&lt;/g,"");
+  inputString = inputString.replace(/&gt;/g,"");
+  inputString = inputString.replace(/&lt;/g,"");
+  inputString = inputString.replace(/&qm;/g,"");
+  inputString = inputString.replace(/&bs;/g,"");
+  inputString = inputString.replace(/&fs;/g,"");
+  inputString = inputString.replace(/&pcnt;/g,"");
+  inputString = inputString.replace(/&sc;/g,"");
+
+  return inputString;
 }
 
 //api routes
