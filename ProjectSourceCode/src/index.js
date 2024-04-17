@@ -122,7 +122,7 @@ function sanitize(inputString){
 
 //take sanitized input and remove special characters, split string into separate words
 function saniRemove(inputString){
-  
+
 }
 
 //api routes
@@ -490,7 +490,7 @@ app.get('/logout', async (req, res) => {
   });
   
   //handle all unmatched urls
-  app.all('*', () => {
+  app.all('*', (req,res) => {
     res.redirect('/');
   })
 

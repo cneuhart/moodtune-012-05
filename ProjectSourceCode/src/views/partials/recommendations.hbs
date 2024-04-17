@@ -38,7 +38,6 @@
                         <input id="recInput" id="submitRecommendation" type="button" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{/if}}
-                {{> message}}
         </div>
         <div>
             <div id="tableContainer">
@@ -52,6 +51,11 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
+                        {{#if message}}
+                            <tr>
+                                <td>{{> message}}</td>
+                            </tr>
+                        {{/if}}
                         {{#each data.tracks}}
                             <tr>
                                 <td>{{ name }}</td>
