@@ -3,15 +3,6 @@
 <!-- Username Input Field -->
 <label for = "username">Username: {{ username }}</label>
 
-<!-- Form for changing username -->
-<form method="POST" action="/userprofile/change-username">
-    <label for="newUsername">New Username:</label>
-    <input type="text" id="newUsername" name="newUsername" placeholder="Enter your new username">
-    <button type="submit">Change Username</button>
-</form>
-
-
-
 {{!-- {{Profile Picture}} --}}
 <label for="profilePicture">Profile Picture (use a screenshot):</label>
 <input type="file" id="profilePicture" accept="image/png">
@@ -75,47 +66,23 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+{{!-- Display previous recommendations --}}
+{{#if recommendations}}
+  <h2>Your Recommendations:</h2>
+  <ul>
+    {{#each recommendations}}
+      <li>
+        <p>Track Name: {{track_name}}</p>
+        <p>Artist: {{artist_name}}</p>
+        <p>Genre: {{genreInput}}</p>
+        <img src="{{album_image_url}}" alt="Album Cover">
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No recommendations found.</p>
+{{/if}}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{!-- {{Previous Recommendations}} --}}
-<script>
-    // Function to fetch and display user's previous recommendations
-    function fetchAndDisplayRecommendations() {
-        // Fetch user's previous recommendations from the database
-        fetch('/pages/recommendations')
-            .then(response => response.json())
-            .then(data => {
-                // Display recommendations
-                const previousRecommendations = document.getElementById('previousRecommendations');
-                data.forEach(recommendation => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${recommendation.track_name} by ${recommendation.artist_name}`;
-                    previousRecommendations.appendChild(listItem);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching recommendations:', error);
-            });
-    }
-
-    // Call fetchAndDisplayRecommendations function when the page loads
-    window.addEventListener('DOMContentLoaded', fetchAndDisplayRecommendations);
-</script>
 
 {{!-- {{Settings}} --}}
     {{!-- {{Filter Recommendations}} --}}
