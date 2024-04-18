@@ -1,0 +1,144 @@
+<div id="wrapper">
+    <div id="leftSpacer"></div>
+    <div id="leftSide">
+        <p>PREGENERATED SECTION</p>
+    </div>
+    <div id="rightSide">
+        <div id="tableButtons">
+            <div id="recSelectors">
+                <form id="recInput" method="GET" action="/">
+                    <label>recommendations</label>
+                    <input name="inputs" type="text">
+                    <input type="submit" value="Submit">
+                </form>
+                <form id="recInput" method="GET" action="/">
+                    <label for="mood-list">Choose a mood:</label> 
+                    <select name="mood-list" id="mood-list">
+                        <option value="happy">Happy</option>
+                        <option value="sad">Sad</option>  
+                        <option value="angry">Angry</option>
+                        <option value="upset">Upset</option>   
+                        <option value="nostalgic">Nostalgic</option> 
+                        <option value="party">Party</option> 
+                        <option value="feel-good">Feel-good</option> 
+                        <option value="breakup">Breakup</option> 
+                        <option value="long drive">Long Drive</option>
+                        <input type="submit" value="Submit">
+                    </select>
+                </form>
+            </div>
+                {{#if data}}
+                    <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
+                        <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
+                        <input type="hidden" name="inputText" value="{{inputText}}">
+                        <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+                    </form>
+                {{else}}
+                    <form>
+                        <input id="recInput" id="submitRecommendation" type="button" value="ADD PLAYLIST TO SPOTIFY">
+                    </form>
+                {{/if}}
+                {{> message}}
+        </div>
+        <div>
+            <div id="tableContainer">
+                <table id="table">
+                    <thead id="tableHead">
+                        <tr id="headRow">
+                            <th>track name</th>
+                            <th>image</th>
+                            <th>artist name</th>
+                            <th>URI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        {{#each data.tracks}}
+                            <tr>
+                                <td>{{ name }}</td>
+                                <td><img src="{{album.images.[0].url}}" width="90" height="90"></td>
+                                <td>{{ artists.[0].name }}</td>
+                                <td>{{ uri }}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="rightSpacer"></div>
+</div>
+
+
+<style>
+    #wrapper{
+        display:inline-flex;
+        height: 100%;
+        overflow: hidden;
+    }
+    #leftSpacer{
+        width: 1.5%;
+    }
+    #leftSide{
+        width: 23.5%;
+        height: 100%;
+    }
+    #rightSide{
+        width: 73.5%;
+        height: 100%;
+    }
+    #rightSpacer{
+        width: 1.5%;
+    }
+    #tableButtons {
+        justify-content: space-between;
+        align-items: center;
+        display: inline-flex;
+        border-radius: 1rem;
+        background-color: white;
+        width: 100%;
+        height: 10%;
+        padding: 1rem;
+        margin-top: 1rem;
+        margin: 1rem;
+        
+    }
+    #recSelectors{
+        display: inline-flex;
+    }
+    #recInput{
+        padding-right: 1rem;
+    }
+    #tableContainer{
+        width: 100%;
+        height: 79vh;
+        background-color: white;
+        display: inline-flex;
+        justify-content: space-between;
+        padding: 1rem;
+        margin: 1rem;
+        margin-top: 0;
+        border-radius: 1rem;
+    }
+    #table{
+        width: 100%;
+    }
+    #tableBody{
+        display:inline-block;
+        overflow-y: scroll;
+        height: 73vh;
+        width: 100%;
+    }
+    #tableHead{
+        display:inline-block;
+        width: 100%;
+    }
+    #headRow{
+        
+    }
+    tr{
+
+    }
+    td{
+        
+    }
+</style>

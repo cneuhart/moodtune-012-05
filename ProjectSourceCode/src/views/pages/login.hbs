@@ -5,19 +5,18 @@
   </div>
   <div class="card-body">
     <form method="POST" action="/login" class="p-3">
-      <div class="form-group" style="margin-top:2em">
+      <div class="form-group" style="margin-top:1em">
           <label for="InputUsername">Username</label>
           <input name="username" type="username" class="form-control" id="inputUsername" aria-describedby="usernameHelp">
-          <label for="inputPassword">Password</label>
+          <label style="margin-top:0.5em;" for="inputPassword">Password</label>
           <input name="password" type="inputPassword" class="form-control" id="inputEmail" aria-describedby="passwordHelp">
       </div>
+      <div class="pt-3 text-center">
+          <button type="submit" class="btn btn-dark btn-lg">Login</button>
+    </div>
     </form>
 
-    <div class="pt-3 text-center">
-          <button type="submit" class="btn btn-primary">Login</button>
-    </div>
-
-      <footer style="margin-top:6em" class="text-center text-muted">
+      <footer style="margin-top:2em" class="text-center text-muted">
         <p>Don't have an account? Click <a href='/register'>Register.</a> to Register.</p>
       </footer>
   </div>

@@ -1,0 +1,138 @@
+<div class="wholeRec">
+    <div class="preRec">
+
+    </div>
+
+    <div id="tableDiv" class="p-3 recTable">
+        {{#if data}}
+        <table class="table">
+            <div id="theadDiv">
+                <thead>
+                    {{!-- <label for="reccomendations">Recommened Songs</label> --}}
+                    {{!-- based on user input, bring up spotify songs with the same API calls --}}
+                    <tr> {{! Song format}}
+                        <th scope='col'>track name</th>
+                        <th scope='col'>artist name</th>
+                        <th scope='col'>image</th>
+                        <th>URI</th>
+                        {{!-- <th scope='col'>album</th> --}}
+                    </tr>
+                </thead>
+            </div>
+            <tbody id="generatedRecommendations">
+                {{#each data.tracks}}
+                {{!Call command from spotifyCall.js in Stats branch}}
+                    <tr> {{!Display the reccomended songs}}
+                        <td>{{ name }}</td>
+                        <td><img src="{{album.images.[0].url}}" width="90" height="90"></td>
+                        <td>{{ artists.[0].name }}</td>
+                        <td>{{ uri }}</td>
+                        {{!-- <td>{{ album }}</td> --}}
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{/if}}
+    </div>
+</div>
+
+<style>
+    html{
+        overflow: hidden;
+    }
+    .tableDiv{
+        height: 100px;
+        height: 100%;
+    }
+    .recInput {
+        float:left;
+        display: inline;
+        padding: 1%;
+    }
+    .tableButtons {
+        background-color: white;
+        width: 100%;
+        height: 10%;
+    }
+    .table{
+        display: block;
+        overflow: scroll;
+        overflow-x: hidden;
+        position: relative;
+        width: 100%;
+        height: 10px;
+    }
+    #submitRecommendation{
+        padding: 0.5%;
+        margin: 1%;
+        float: right;
+    }
+    .preRec{
+        float:left;
+        width:25%;
+        height: 100%;
+    }
+    .recTable{
+        float: left;
+        width: 75%;
+        height: 100%;
+    }
+    .wholeRec{
+        display:flex;
+        height: 100%;
+        width: 100%;
+    }
+    #tableDiv{
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+    .table{
+        width: 100%;
+        height: 100%;
+    }
+    #recommendationSelector{
+        height: 100%;
+        width: 100%;
+    }
+    thead{
+        width: 100%;
+        height: 5%;
+        position: sticky;
+        top: 0;
+        display: inline-block;
+    }
+    tr{
+        display:inline-block;
+        width: 100%;
+    }
+    th, td{
+        display:table-cell;
+        width: 40vh;
+    }
+    #theadDiv{
+        position: absolute;
+    }
+    #generatedRecommendations{
+
+    }
+</style>
+
+
+<div class="col1">
+                    <div class="tableHeader">track name</div>
+                    <div class="tableBodyContainer">
+                        {{#each data.tracks}}
+                            <div>{{name}}</div>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="col2">
+                    <div class="tableHeader">artist name</div>
+                </div>
+                <div class="col3">
+                    <div class="tableHeader"></div>
+                </div>
+                <div class="col4">
+                    <div class="tableHeader">URI(tbd)</div>
+                </div>

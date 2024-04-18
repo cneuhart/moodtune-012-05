@@ -17,15 +17,23 @@ body {
 
 .card-title {
     padding-top:15px;
+    margin-top:0.5em;
     font-weight:bold;
 }
 
-button {
-    width:125px;
-    height:auto;
-}
 
 .card-footer {
     padding-top:10000px;
+}
+
+.btn {
+    background-color:black;
+    background-size: cover;
+    width:85%;
+    margin-top:2em;
+}
+
+.bold {
+    font-weight: bold;
 }
 

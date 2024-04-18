@@ -1,18 +1,88 @@
 <h1>User Profile</h1>
 
 <!-- Username Input Field -->
-<label for = "username">Username:</label>
-<input type="text" id="username" name="username" placeholder="Enter your username">
+<label for = "username">Username: {{ username }}</label>
+
+{{!-- {{Profile Picture}} --}}
+<label for="profilePicture">Profile Picture (use a screenshot):</label>
+<input type="file" id="profilePicture" accept="image/png">
+
+<img id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
+
+<button onclick="uploadProfilePicture()">Upload</button>
+
+<script>
+function uploadProfilePicture() {
+    var input = document.getElementById('profilePicture');
+    var file = input.files[0];
+
+    if (file) {
+        if (file.type === 'image/png') {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var uploadedImage = document.getElementById('uploadedImage');
+                uploadedImage.src = e.target.result;
+                uploadedImage.style.display = 'block';
+
+                localStorage.setItem('profilePicture', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please upload a PNG image.');
+        }
+    } else {
+        alert('Please select a file to upload.');
+    }
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    var uploadedImage = document.getElementById('uploadedImage');
+    if (localStorage.getItem('profilePicture')) {
+        uploadedImage.src = localStorage.getItem('profilePicture');
+        uploadedImage.style.display = 'block';
+    }
+});
+</script>
+
+
 
 {{!-- {{Bio/About Me}} --}}
-<label for = "About Me">About Me:</label>
-<textarea id="About Me" name="About Me" placeholder="Write something about yourself"></textarea>
+<label for="AboutMe">About Me:</label>
+<textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
 
-{{!-- {{Profile Picture?}} --}}
-<label for="profilePicture">Profile Picture:</label>
-<input type="file" id="profilePicture" name="profilePicture">
+<button onclick="publishAboutMe()">Publish</button>
 
-{{!-- {{Previous Recommendations}} --}}
+<script>
+function publishAboutMe() {
+    var aboutMeContent = document.getElementById('AboutMe').value;
+    localStorage.setItem('aboutMeText', aboutMeContent);
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    var aboutMeTextarea = document.getElementById('AboutMe');
+    if (localStorage.getItem('aboutMeText')) {
+        aboutMeTextarea.value = localStorage.getItem('aboutMeText');
+    }
+});
+</script>
+
+{{!-- Display previous recommendations --}}
+{{#if recommendations}}
+  <h2>Your Recommendations:</h2>
+  <ul>
+    {{#each recommendations}}
+      <li>
+        <p>Track Name: {{track_name}}</p>
+        <p>Artist: {{artist_name}}</p>
+        <p>Genre: {{genreInput}}</p>
+        <img src="{{album_image_url}}" alt="Album Cover">
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No recommendations found.</p>
+{{/if}}
+
 
 {{!-- {{Settings}} --}}
     {{!-- {{Filter Recommendations}} --}}
