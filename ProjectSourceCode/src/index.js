@@ -115,6 +115,9 @@ async function LoginTest(req){
 
 //api routes
 
+
+
+
 app.get('/', async (req, res) => {
 
   //TEST IF USER IS LOGGED IN
@@ -177,13 +180,73 @@ app.get('/homepage', async (req, res) => {
     res.render('pages/homepage');
   });
 
+
+
+
+
+
+
+
+
+
+
+
+/*
   app.get('/userprofile', async (req, res) => {
     if(await LoginTest(req) == false){
       res.status(400).redirect('/login')
       return 0;
     }
-    res.render('pages/userprofile');
+   //  res.render('pages/userprofile');
+   const recommendations = getUserRecommendations(req);
+
+   //render page with generated recommendations
+   res.render('pages/userprofile',{
+    recommendations: recommendations
+  })
   });
+*/
+
+  app.get('/userprofile', async (req, res) => {
+    try {
+        // Ensure user is logged in
+        if (await LoginTest(req) == false) {
+            res.status(400).redirect('/login');
+            return;
+        }
+
+        // Fetch recommendations for the current user
+        const recommendations = await getUserRecommendations(req);
+
+        // Check if recommendations array is empty
+        if (recommendations.length === 0) {
+            // If recommendations array is empty, render userprofile.hbs with no recommendations message
+            res.render('pages/userprofile', { recommendations: null });
+        } else {
+            // If recommendations array is not empty, render userprofile.hbs with recommendations data
+            res.render('pages/userprofile', { recommendations: recommendations });
+        }
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error("Error fetching recommendations:", error);
+        res.status(500).render('error', { message: 'An error occurred while fetching recommendations.' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post('/register', async (req,res) => {
   const username = req.body.username;
@@ -251,6 +314,7 @@ app.get('/logout', async (req, res) => {
   req.session.destroy();
   res.render('pages/login', {message: 'Logged out Successfully'});
 });
+
 
 //spotify authentication routes
   //spotify login/auth
@@ -396,7 +460,10 @@ app.get('/logout', async (req, res) => {
       
     });
 
-/*
+
+
+
+
   //recommendations route
   app.get('/recommendations', async (req,res) => {
    
@@ -432,9 +499,8 @@ app.get('/logout', async (req, res) => {
       })
     });
   
-  });
+  }); 
 
-*/
   async function storeRecommendations(recommended_for, results, genreInput){
 
     if(results.tracks == undefined){
@@ -478,6 +544,96 @@ app.get('/logout', async (req, res) => {
 
   }
 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  async function getUserRecommendations(req) {
+    // Construct SQL query to fetch recommendations
+    const user = req.session.user;
+    const query = `
+        SELECT * FROM recommendations WHERE recommended_for = '${user}' limit 10;
+    `;
+
+    try {
+        // Execute the query to fetch recommendations
+        const recommendations = await db.manyOrNone(query);
+
+        console.log(recommendations)
+        return recommendations;
+
+        
+
+    } catch (error) {
+        // Handle any errors that occur during the database operation
+        console.error("Error fetching recommendations:", error);
+        throw error; // Rethrow the error to be caught by the caller
+    }
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //recommendations POST route; create recommended playlist
   app.post('/recommendations', async (req,res) => {
 
@@ -515,6 +671,57 @@ app.get('/logout', async (req, res) => {
     });
   
   });
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
   
   
 
