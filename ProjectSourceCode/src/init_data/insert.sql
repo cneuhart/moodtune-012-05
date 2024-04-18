@@ -35,4 +35,9 @@ VALUES(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
 (132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music')
 
 INSERT INTO connect (gid, mid)
-VALUES (20, 1), (1,2)
+VALUES (1,2),  -- acoustic
+(19,5), -- club
+(20, 1), -- comedy
+(113,3), --sad
+(120, 2), --sleep
+(125, 2) --study
