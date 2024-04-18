@@ -545,33 +545,6 @@ app.get('/logout', async (req, res) => {
   }
 
 
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   async function getUserRecommendations(req) {
     // Construct SQL query to fetch recommendations
     const user = req.session.user;
@@ -594,43 +567,6 @@ app.get('/logout', async (req, res) => {
         throw error; // Rethrow the error to be caught by the caller
     }
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -685,45 +621,6 @@ app.get('/logout', async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-  
-  
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-  
-  
 
 
 // *****************************************************
