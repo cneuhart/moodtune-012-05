@@ -125,6 +125,73 @@ async function LoginTest(req){
 
 }
 
+//sanitize user input strings that will be input into DB queries (separates into array with sanitized input)
+function sanitize(inputString){
+
+  let splitString = inputString.split(" ");
+
+  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',}
+  const regex = /[;&<>"'/\\?%]/ig;
+
+  for(let i = splitString.length; i > 0; i--){
+    if(splitString[i] != undefined){
+      console.log(splitString[i])
+      splitString[i] = splitString[i].replace(regex, (match)=>(regexMap[match]))
+    }
+  }
+
+  
+  //return inputString.replace(regex, (match)=>(regexMap[match]))
+  return saniRemove(splitString)
+}
+
+//take sanitized input and remove special characters, split string into separate words
+function saniRemove(inputString){
+
+  let returnString = inputString;
+
+  for(let i = returnString.length; i > 0; i--){
+    if(returnString[i] == undefined){
+      continue;
+    }
+    returnString[i] = returnString[i].replace(/&quot;/g,"");
+    returnString[i] = returnString[i].replace(/&apst;/g,"");
+    returnString[i] = returnString[i].replace(/&amp;/g,"");
+    returnString[i] = returnString[i].replace(/&lt;/g,"");
+    returnString[i] = returnString[i].replace(/&gt;/g,"");
+    returnString[i] = returnString[i].replace(/&lt;/g,"");
+    returnString[i] = returnString[i].replace(/&qm;/g,"");
+    returnString[i] = returnString[i].replace(/&bs;/g,"");
+    returnString[i] = returnString[i].replace(/&fs;/g,"");
+    returnString[i] = returnString[i].replace(/&pcnt;/g,"");
+    returnString[i] = returnString[i].replace(/&sc;/g,"");
+  }
+
+  return returnString;
+}
+
+//sanitize string input to store input string on DB
+function singleSanitize(inputString){
+
+  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',}
+  const regex = /[;&<>"'/\\?%]/ig;
+  inputString = inputString.replace(regex, (match)=>(regexMap[match]))
+
+  inputString = inputString.replace(/&quot;/g,"");
+  inputString = inputString.replace(/&apst;/g,"");
+  inputString = inputString.replace(/&amp;/g,"");
+  inputString = inputString.replace(/&lt;/g,"");
+  inputString = inputString.replace(/&gt;/g,"");
+  inputString = inputString.replace(/&lt;/g,"");
+  inputString = inputString.replace(/&qm;/g,"");
+  inputString = inputString.replace(/&bs;/g,"");
+  inputString = inputString.replace(/&fs;/g,"");
+  inputString = inputString.replace(/&pcnt;/g,"");
+  inputString = inputString.replace(/&sc;/g,"");
+
+  return inputString;
+}
+
 //api routes
 
 app.get('/', async (req, res) => {
@@ -144,9 +211,9 @@ app.get('/', async (req, res) => {
 
   const savedToken = req.session.access_token;
   
-  const stringinputs = req.query.inputs;
+  const stringinputs = singleSanitize(req.query.inputs);
 
-  const inputs = stringinputs.split(" ")
+  const inputs = sanitize(req.query.inputs)
 
   spotifyCall.getTrackRecommendation(savedToken, inputs)
   .then(results => {
@@ -380,6 +447,11 @@ app.get('/logout', async (req, res) => {
   
   //user statistics route
     app.get('/statistics', async (req,res) => {
+
+      if(await LoginTest(req) == false){
+        res.status(400).redirect('/login')
+        return 0;
+      }
   
       const savedToken = req.session.access_token;
   
@@ -408,45 +480,6 @@ app.get('/logout', async (req, res) => {
       
     });
 
-/*
-  //recommendations route
-  app.get('/recommendations', async (req,res) => {
-   
-
-    //TEST IF USER IS LOGGED IN
-      //!should probably send an error message to login page on redirect
-    if(await LoginTest(req) == false){
-      res.status(400).redirect('/login')
-      return 0;
-    }
-
-    const savedToken = req.session.access_token;
-  
-    const stringinputs = req.query.inputs;
-  
-    const inputs = stringinputs.split(" ")
-  
-    spotifyCall.getTrackRecommendation(savedToken, inputs)
-    .then(results => {
-      //store recommendations in db
-      //do not need to await, recommendations showing on page does not depend on DB entry
-      storeRecommendations(req.session.user, results, stringinputs);
-
-      //render page with generated recommendations
-      res.render('pages/recommendations',{
-        data: results,
-        inputText: stringinputs
-      })
-    })
-    .catch(error => {
-      res.status(500).json({
-        error: error
-      })
-    });
-  
-  });
-
-*/
   async function storeRecommendations(recommended_for, results, genreInput){
 
     if(results.tracks == undefined){
@@ -515,7 +548,7 @@ app.get('/logout', async (req, res) => {
 
     spotifyCall.createRecommendedPlaylist(savedToken, recommendedTracks, genreInput)
     .then(results => { //where to redirect? -> !should resolve with confirmation message that playlist was added.
-      res.render('pages/recommendations',{
+      res.render('pages/homepage',{
         message: "Playlist successfully added to Spotify account.",
         snapshot: results
       })
@@ -528,7 +561,10 @@ app.get('/logout', async (req, res) => {
   
   });
   
-  
+  //handle all unmatched urls
+  app.all('*', (req,res) => {
+    res.redirect('/');
+  })
 
 
 // *****************************************************
