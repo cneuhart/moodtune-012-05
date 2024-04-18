@@ -130,12 +130,11 @@ function sanitize(inputString){
 
   let splitString = inputString.split(" ");
 
-  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',}
-  const regex = /[;&<>"'/\\?%]/ig;
+  const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',"*": '&st;',}
+  const regex = /[;&<>"'/\\?%*]/ig;
 
-  for(let i = splitString.length; i > 0; i--){
+  for(let i = splitString.length; i >= 0; i--){
     if(splitString[i] != undefined){
-      console.log(splitString[i])
       splitString[i] = splitString[i].replace(regex, (match)=>(regexMap[match]))
     }
   }
@@ -150,7 +149,7 @@ function saniRemove(inputString){
 
   let returnString = inputString;
 
-  for(let i = returnString.length; i > 0; i--){
+  for(let i = returnString.length; i >= 0; i--){
     if(returnString[i] == undefined){
       continue;
     }
@@ -165,6 +164,7 @@ function saniRemove(inputString){
     returnString[i] = returnString[i].replace(/&fs;/g,"");
     returnString[i] = returnString[i].replace(/&pcnt;/g,"");
     returnString[i] = returnString[i].replace(/&sc;/g,"");
+    returnString[i] = returnString[i].replace(/&st;/g,"");
   }
 
   return returnString;
