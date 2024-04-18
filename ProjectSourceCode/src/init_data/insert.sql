@@ -1,6 +1,6 @@
 INSERT INTO moods (mid, mood)
 VALUES(1, 'happy'), (2, 'calm'), (3, 'sad'), (4, 'angry'), (5,'party'), 
-(6,'laugh'),(7,'rock')
+(6,'laugh'),(7,'rock'),(8,'dance')
 
 INSERT INTO genres (gid, genre)
 VALUES(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
@@ -34,10 +34,18 @@ VALUES(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
 (127, 'swedish'),(128, 'synth-pop'),(129, 'tango'),(130, 'techno'),(131, 'trance'),
 (132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music')
 
-INSERT INTO connect (gid, mid)
+INSERT INTO connect (gid, mid) --genre id, mood id
 VALUES (1,2),  -- acoustic
-(19,5), -- club
-(20, 1), -- comedy
+ -- afrobeat
+(9,3)--blues
+(19,5),(19,8), -- club
+(20, 1), (20,6), -- comedy
+(22,8), --dance
+(45,8), --groove
+(48,1), --happy
+(56,5), --house
+(93,5), --party
+(105,3), --rainy-day
 (113,3), --sad
 (120, 2), --sleep
 (125, 2) --study
