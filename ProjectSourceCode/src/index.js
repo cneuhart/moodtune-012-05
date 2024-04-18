@@ -214,9 +214,9 @@ app.get('/', async (req, res) => {
 
   const savedToken = req.session.access_token;
   
-  const stringinputs = req.query.inputs;
+  const stringinputs = singleSanitize(req.query.inputs);
 
-  const inputs = stringinputs.split(" ")
+  const inputs = sanitize(req.query.inputs)
 
   spotifyCall.getTrackRecommendation(savedToken, inputs)
   .then(results => {

@@ -47,7 +47,8 @@ module.exports.getTopArtists = async function getTopArtists(savedToken, time_ran
 module.exports.getTrackRecommendation = async function getTrackRecommendation(savedToken, inputs){
 
 
-    //NEED BETTER STRING FILTERING FOR INPUTS; 
+    //now inputs are an ARRAY of STRINGS
+    //pre-filtered
 
     let artists = "seed_artists="
     let tracks = "seed_tracks="
