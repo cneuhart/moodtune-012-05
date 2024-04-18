@@ -259,33 +259,6 @@ app.get('/homepage', async (req, res) => {
     res.render('pages/homepage');
   });
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-  app.get('/userprofile', async (req, res) => {
-    if(await LoginTest(req) == false){
-      res.status(400).redirect('/login')
-      return 0;
-    }
-   //  res.render('pages/userprofile');
-   const recommendations = getUserRecommendations(req);
-
-   //render page with generated recommendations
-   res.render('pages/userprofile',{
-    recommendations: recommendations
-  })
-  });
-*/
-
   app.get('/userprofile', async (req, res) => {
     try {
         // Ensure user is logged in
@@ -311,21 +284,6 @@ app.get('/homepage', async (req, res) => {
         res.status(500).render('error', { message: 'An error occurred while fetching recommendations.' });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.post('/register', async (req,res) => {
   const username = req.body.username;
@@ -544,6 +502,43 @@ app.get('/logout', async (req, res) => {
       
     });
 
+  //recommendations route
+  app.get('/recommendations', async (req,res) => {
+   
+
+    //TEST IF USER IS LOGGED IN
+      //!should probably send an error message to login page on redirect
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
+
+    const savedToken = req.session.access_token;
+  
+    const stringinputs = req.query.inputs;
+  
+    const inputs = stringinputs.split(" ")
+  
+    spotifyCall.getTrackRecommendation(savedToken, inputs)
+    .then(results => {
+      //store recommendations in db
+      //do not need to await, recommendations showing on page does not depend on DB entry
+      storeRecommendations(req.session.user, results, stringinputs);
+
+      //render page with generated recommendations
+      res.render('pages/recommendations',{
+        data: results,
+        inputText: stringinputs
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error
+      })
+    });
+  
+  });
+
   async function storeRecommendations(recommended_for, results, genreInput){
 
     if(results.tracks == undefined){
@@ -612,7 +607,6 @@ app.get('/logout', async (req, res) => {
 } 
 
 
-
   //recommendations POST route; create recommended playlist
   app.post('/recommendations', async (req,res) => {
 
@@ -650,6 +644,8 @@ app.get('/logout', async (req, res) => {
     });
   
   });
+
+
   
   //handle all unmatched urls
   app.all('*', (req,res) => {
