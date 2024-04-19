@@ -215,11 +215,40 @@ app.get('/', async (req, res) => {
 
   const inputs = sanitize(req.query.inputs)
 
-  spotifyCall.getTrackRecommendation(savedToken, inputs)
+
+  //compare sanitized string array against database
+  //genreString is the PSQL query portion that is generated based on how many words are in the input string.
+  let genreString = "";
+  for(let i = 0; i < inputs.length; i++){
+    if(i == 0){
+      genreString = genreString.concat(`moods.mood = '${inputs[i]}' `);
+    }
+    genreString = genreString.concat(`OR moods.mood = '${inputs[i]}' `);
+  }
+  //matchedInputs is an array of genres that is returned from DB after querying user input words
+  const genreMatchQuery = `SELECT genres.genre FROM genres JOIN wgConnect ON genres.id = wgconnect.genre_id JOIN moods ON moods.id = wgconnect.mood_id WHERE ${genreString} LIMIT 5;`;
+  const matchedInputsJSON = await db.any(genreMatchQuery)
+
+  //if no genres are returned from inputs, redirect back to recommendations page with error
+  if(matchedInputsJSON.length == 0){
+    res.render("pages/homepage",{
+      message:"No matching genres",
+      error:true
+    });
+    return 0;
+  }
+
+  //convert array of JSON to array of strings
+  let stringArrayMatchedInputs = [];
+  for(let i = 0; i < matchedInputsJSON.length; i++){
+    stringArrayMatchedInputs[i] = matchedInputsJSON[i].genre;
+  }
+
+  spotifyCall.getTrackRecommendation(savedToken, stringArrayMatchedInputs)
   .then(results => {
     //store recommendations in db
     //do not need to await, recommendations showing on page does not depend on DB entry
-    storeRecommendations(req.session.user, results, stringinputs);
+    storeRecommendations(req.session.user, results, stringArrayMatchedInputs);
 
     //render page with generated recommendations
     res.render('pages/homepage',{
@@ -374,6 +403,15 @@ app.get('/logout', async (req, res) => {
       const accessToken = tokens.access_token;
       const refreshToken = tokens.refresh_token;
   
+      //IF USER REFUSED SPOTIFY ACCESS:
+      //redirect to login with error
+      if (accessToken == undefined){
+        res.render("pages/login",{
+          message: "Refused Spotify Integration: Re-login and accept to use moodtune.",
+          error: true
+        });
+        return 0;
+      }
   
       //save access_token in session
       //save refresh_token in session
@@ -480,11 +518,14 @@ app.get('/logout', async (req, res) => {
       
     });
 
-  async function storeRecommendations(recommended_for, results, genreInput){
+  async function storeRecommendations(recommended_for, results, genreArray){
 
     if(results.tracks == undefined){
       return 0;
     }
+
+    //convert array of genre strings to one singular string to be stored
+    let genreInput = genreArray.join(" ");
 
     let appendQuery = "";
 

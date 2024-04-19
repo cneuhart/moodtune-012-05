@@ -1,6 +1,6 @@
 INSERT INTO moods (id, mood) VALUES 
 (1, 'happy'), (2, 'calm'), (3, 'sad'), (4, 'angry'), (5,'party'), 
-(6,'laugh'),(7,'rock');
+(6,'laugh'),(7,'rock'),(8,'dance');
 
 INSERT INTO genres (id, genre) VALUES 
 (1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
