@@ -19,28 +19,25 @@ CREATE TABLE recommendations(
 DROP TABLE IF EXISTS moods;
 CREATE TABLE moods(
     -- Let's see how to connect
-    mid INT PRIMARY KEY,
-    mood VARCHAR(255) NOT NULL,
-    -- related_genre VARCHAR(255) NOT NULL,
-    -- FOREIGN KEY (related_genre) REFRENCES genres()
+    id INT PRIMARY KEY,
+    mood VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS genres;
 CREATE TABLE genres(
-    gid INT PRIMARY KEY,
-    genre VARCHAR(255) NOT NULL,
-    -- related_moods VARCHAR(255) NOT NULL,
-    -- FOREIGN KEY (related_genre) REFRENCES genres()
+    id INT PRIMARY KEY,
+    genre VARCHAR(255) NOT NULL
 );
 
 -- connection -2foeigh keys, -one is genre id, one is mood id
 --left merge connect to moods, then left merge w/genres
-DROP TABLE IF EXISTS connect;
-CREATE TABLE connect(
-    -- id INT PRIMARY KEY,
-    -- related_genre VARCHAR(255) NOT NULL,
-    FOREIGN KEY (gid) REFRENCES genres()
-    FOREIGN KEY (mid) REFRENCES moods()
+DROP TABLE IF EXISTS wgConnect;
+CREATE TABLE wgConnect(
+    genre_id INT,
+    mood_id INT,
+    FOREIGN KEY (genre_id) REFERENCES genres(id),
+    FOREIGN KEY (mood_id) REFERENCES moods(id),
+    PRIMARY KEY (genre_id,mood_id)
 );
 
 

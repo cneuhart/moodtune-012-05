@@ -1,9 +1,9 @@
-INSERT INTO moods (mid, mood)
-VALUES(1, 'happy'), (2, 'calm'), (3, 'sad'), (4, 'angry'), (5,'party'), 
-(6,'laugh'),(7,'rock'),(8,'dance')
+INSERT INTO moods (id, mood) VALUES 
+(1, 'happy'), (2, 'calm'), (3, 'sad'), (4, 'angry'), (5,'party'), 
+(6,'laugh'),(7,'rock'),(8,'dance');
 
-INSERT INTO genres (gid, genre)
-VALUES(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
+INSERT INTO genres (id, genre) VALUES 
+(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
 (5, 'ambient' ), (6, 'anime'), (7, 'black-metal' ), (8, 'bluegrass'), 
 (9, 'blues' ), (10, 'bossanova' ), (11, 'brazil'), (12, 'breakbeat' ), 
 (13, 'british' ), (14, 'cantopop'), (15, 'chicago-house'), (16, 'children'), 
@@ -32,12 +32,11 @@ VALUES(1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
 (118, 'singer-songwriter'),(119, 'ska'),(120, 'sleep'),(121, 'songwriter'),
 (122, 'soul'),(123, 'soundtracks'),(124, 'spanish'),(125, 'study'),(126, 'summer'),
 (127, 'swedish'),(128, 'synth-pop'),(129, 'tango'),(130, 'techno'),(131, 'trance'),
-(132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music')
+(132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music');
 
-INSERT INTO connect (gid, mid) --genre id, mood id
+INSERT INTO wgConnect (genre_id, mood_id)
 VALUES (1,2),  -- acoustic
- -- afrobeat
-(9,3)--blues
+(9,3), --blues
 (19,5),(19,8), -- club
 (20, 1), (20,6), -- comedy
 (22,8), --dance
@@ -48,4 +47,4 @@ VALUES (1,2),  -- acoustic
 (105,3), --rainy-day
 (113,3), --sad
 (120, 2), --sleep
-(125, 2) --study
+(125, 2); --study
