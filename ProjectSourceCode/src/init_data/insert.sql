@@ -13,24 +13,23 @@ INSERT INTO moods (id, mood) VALUES
 (46, 'grunge'), (47, 'guitar'), (48, 'happy'), (49, 'hard-rock'), 
 (50, 'hardcore'), (51, 'hardstyle'), (52, 'heavy-metal'), (53, 'hip-hop'),
 (54, 'holidays'), (55, 'honky-tonk'), (56, 'house'), (57, 'idm'),
-(58, 'indian'), (59, 'indie'), (60, 'indie-pop'), (70, 'industrial'), 
-(71, 'iranian'), (72, 'j-dance'), (73, 'j-idol'), (74, 'j-pop'), (75, 'j-rock'),
-(76, 'jazz'), (77, 'k-pop'), (78, 'kids'), (79, 'latin'), (80, 'latino'),
-(81, 'malay'), (82, 'mandopop'), (83, 'metal'), (84, 'metal-misc'), 
-(85, 'metalcore'), (86, 'minimal-techno'), (87, 'movies'), (88, 'mhb'),
-(89, 'new-age'), (90, 'new-release'), (91, 'opera'), (92, 'pagode'), (93, 'party'),
-(94, 'philippines-opm'), (95, 'piano'), (96, 'pop'), (97, 'pop-film'),
-(98, 'post-dubstep'), (99, 'power-pop'), (100, 'progressive-house'),
-(101, 'psych-rock'), (102, 'punk'), (103, 'punk-rock'),(104, 'r-n-b'),
-(105, 'rainy-day'),(106, 'reggae'),(107, 'reggaeton'),(108, 'road-trip'),
-(109, 'rock'),(110, 'rock-n-roll'),(111, 'rockabilly'),(112, 'romance'),
-(113, 'sad'),(114, 'salsa'),(115, 'samba'),(116, 'sertanejo'),(117, 'show-tunes'),
-(118, 'singer-songwriter'),(119, 'ska'),(120, 'sleep'),(121, 'songwriter'),
-(122, 'soul'),(123, 'soundtracks'),(124, 'spanish'),(125, 'study'),(126, 'summer'),
-(127, 'swedish'),(128, 'synth-pop'),(129, 'tango'),(130, 'techno'),(131, 'trance'),
-(132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music'),
-(136, 'happy'), (137, 'calm'), (138, 'sad'), (139, 'angry'), (140,'party'), 
-(141,'laugh'),(142,'rock'),(143,'dance');
+(58, 'indian'), (59, 'indie'), (60, 'indie-pop'), (61, 'industrial'), 
+(62, 'iranian'), (63, 'j-dance'), (64, 'j-idol'), (65, 'j-pop'), (66, 'j-rock'),
+(67, 'jazz'), (68, 'k-pop'), (69, 'kids'), (70, 'latin'), (71, 'latino'),
+(72, 'malay'), (73, 'mandopop'), (74, 'metal'), (75, 'metal-misc'), 
+(76, 'metalcore'), (77, 'minimal-techno'), (78, 'movies'), (79, 'mhb'),
+(80, 'new-age'), (81, 'new-release'), (82, 'opera'), (83, 'pagode'), (84, 'party'),
+(85, 'philippines-opm'), (86, 'piano'), (87, 'pop'), (88, 'pop-film'),
+(89, 'post-dubstep'), (90, 'power-pop'), (91, 'progressive-house'),
+(92, 'psych-rock'), (93, 'punk'), (94, 'punk-rock'),(95, 'r-n-b'),
+(96, 'rainy-day'),(97, 'reggae'),(98, 'reggaeton'),(99, 'road-trip'),
+(100, 'rock'),(101, 'rock-n-roll'),(102, 'rockabilly'),(103, 'romance'),
+(104, 'sad'),(105, 'salsa'),(106, 'samba'),(107, 'sertanejo'),(108, 'show-tunes'),
+(109, 'singer-songwriter'),(110, 'ska'),(111, 'sleep'),(112, 'songwriter'),
+(113, 'soul'),(114, 'soundtracks'),(115, 'spanish'),(116, 'study'),(117, 'summer'),
+(118, 'swedish'),(119, 'synth-pop'),(120, 'tango'),(121, 'techno'),(122, 'trance'),
+(123, 'trip-hop'),(124, 'turkish'),(125, 'work-out'),(126, 'world-music'), 
+(127, 'calm'),(128, 'angry'),(129,'laugh');
 
 INSERT INTO genres (id, genre) VALUES 
 (1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
@@ -47,22 +46,22 @@ INSERT INTO genres (id, genre) VALUES
 (46, 'grunge'), (47, 'guitar'), (48, 'happy'), (49, 'hard-rock'), 
 (50, 'hardcore'), (51, 'hardstyle'), (52, 'heavy-metal'), (53, 'hip-hop'),
 (54, 'holidays'), (55, 'honky-tonk'), (56, 'house'), (57, 'idm'),
-(58, 'indian'), (59, 'indie'), (60, 'indie-pop'), (70, 'industrial'), 
-(71, 'iranian'), (72, 'j-dance'), (73, 'j-idol'), (74, 'j-pop'), (75, 'j-rock'),
-(76, 'jazz'), (77, 'k-pop'), (78, 'kids'), (79, 'latin'), (80, 'latino'),
-(81, 'malay'), (82, 'mandopop'), (83, 'metal'), (84, 'metal-misc'), 
-(85, 'metalcore'), (86, 'minimal-techno'), (87, 'movies'), (88, 'mhb'),
-(89, 'new-age'), (90, 'new-release'), (91, 'opera'), (92, 'pagode'), (93, 'party'),
-(94, 'philippines-opm'), (95, 'piano'), (96, 'pop'), (97, 'pop-film'),
-(98, 'post-dubstep'), (99, 'power-pop'), (100, 'progressive-house'),
-(101, 'psych-rock'), (102, 'punk'), (103, 'punk-rock'),(104, 'r-n-b'),
-(105, 'rainy-day'),(106, 'reggae'),(107, 'reggaeton'),(108, 'road-trip'),
-(109, 'rock'),(110, 'rock-n-roll'),(111, 'rockabilly'),(112, 'romance'),
-(113, 'sad'),(114, 'salsa'),(115, 'samba'),(116, 'sertanejo'),(117, 'show-tunes'),
-(118, 'singer-songwriter'),(119, 'ska'),(120, 'sleep'),(121, 'songwriter'),
-(122, 'soul'),(123, 'soundtracks'),(124, 'spanish'),(125, 'study'),(126, 'summer'),
-(127, 'swedish'),(128, 'synth-pop'),(129, 'tango'),(130, 'techno'),(131, 'trance'),
-(132, 'trip-hop'),(133, 'turkish'),(134, 'work-out'),(135, 'world-music');
+(58, 'indian'), (59, 'indie'), (60, 'indie-pop'), (61, 'industrial'), 
+(62, 'iranian'), (63, 'j-dance'), (64, 'j-idol'), (65, 'j-pop'), (66, 'j-rock'),
+(67, 'jazz'), (68, 'k-pop'), (69, 'kids'), (70, 'latin'), (71, 'latino'),
+(72, 'malay'), (73, 'mandopop'), (74, 'metal'), (75, 'metal-misc'), 
+(76, 'metalcore'), (77, 'minimal-techno'), (78, 'movies'), (79, 'mhb'),
+(80, 'new-age'), (81, 'new-release'), (82, 'opera'), (83, 'pagode'), (84, 'party'),
+(85, 'philippines-opm'), (86, 'piano'), (87, 'pop'), (88, 'pop-film'),
+(89, 'post-dubstep'), (90, 'power-pop'), (91, 'progressive-house'),
+(92, 'psych-rock'), (93, 'punk'), (94, 'punk-rock'),(95, 'r-n-b'),
+(96, 'rainy-day'),(97, 'reggae'),(98, 'reggaeton'),(99, 'road-trip'),
+(100, 'rock'),(101, 'rock-n-roll'),(102, 'rockabilly'),(103, 'romance'),
+(104, 'sad'),(105, 'salsa'),(106, 'samba'),(107, 'sertanejo'),(108, 'show-tunes'),
+(109, 'singer-songwriter'),(110, 'ska'),(111, 'sleep'),(112, 'songwriter'),
+(113, 'soul'),(114, 'soundtracks'),(115, 'spanish'),(116, 'study'),(117, 'summer'),
+(118, 'swedish'),(119, 'synth-pop'),(120, 'tango'),(121, 'techno'),(122, 'trance'),
+(123, 'trip-hop'),(124, 'turkish'),(125, 'work-out'),(126, 'world-music');
 
 do $$
     begin
@@ -73,17 +72,16 @@ do $$
 $$;
 
 INSERT INTO wgConnect (genre_id, mood_id)
-VALUES 
-(1,137),  -- acoustic
-(9,138), --blues
-(19,140),(19,143), -- club
+VALUES (1,127),(1,17),  -- acoustic
+(9,104), --blues
+(19,84),(19,22), -- club
 (20, 136), (20,141), -- comedy
-(22,143), --dance
-(45,143), --groove
+(22,19), --dance
+(45,22), --groove
 (48,136), --happy
 (56,140), --house
-(93,140), --party
-(105,138), --rainy-day
-(113,138), --sad
-(120, 137), --sleep
-(125, 137); --study
+(84,19), --party
+(96,104), --rainy-day
+(104,96), --sad
+(111, 127), --sleep
+(116, 127); --study
