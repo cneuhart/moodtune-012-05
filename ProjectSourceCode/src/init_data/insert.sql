@@ -65,23 +65,24 @@ INSERT INTO genres (id, genre) VALUES
 
 do $$
     begin
-        for i in 1..50 loop
+        for i in 1..126 loop
             insert into wgConnect values(i,i);
         end loop;
     end;
 $$;
 
-INSERT INTO wgConnect (genre_id, mood_id)
-VALUES (1,127),(1,17),  -- acoustic
-(9,104), --blues
-(19,84),(19,22), -- club
-(20, 136), (20,141), -- comedy
-(22,19), --dance
-(45,22), --groove
-(48,136), --happy
-(56,140), --house
-(84,19), --party
-(96,104), --rainy-day
-(104,96), --sad
-(111, 127), --sleep
-(116, 127); --study
+--INSERT INTO wgConnect (genre_id, mood_id)
+--VALUES 
+--(1,127),(1,17),  -- acoustic
+-- (9,104), --blues
+-- (19,84),(19,22), -- club
+-- --(20, 136), (20,141), -- comedy
+-- (22,19), --dance
+-- (45,22), --groove
+-- --(48,136), --happy
+-- --(56,140), --house
+-- (84,19), --party
+-- (96,104), --rainy-day
+-- (104,96), --sad
+-- (111, 127), --sleep
+-- (116, 127); --study
