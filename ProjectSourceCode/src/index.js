@@ -128,7 +128,9 @@ async function LoginTest(req){
 //sanitize user input strings that will be input into DB queries (separates into array with sanitized input)
 function sanitize(inputString){
 
-  let splitString = inputString.split(" ");
+  let lowercaseString = inputString.toLowerCase();
+
+  let splitString = lowercaseString.split(" ");
 
   const regexMap = {'"': '&quot;',"'": '&apst;','&': '&amp;','<': '&lt;','>': '&gt;','?': '&qm;','\\': '&bs;',"/": '&fs;',"%": '&pcnt;',";": '&sc;',"*": '&st;',}
   const regex = /[;&<>"'/\\?%*]/ig;
