@@ -36,8 +36,15 @@ INSERT INTO genres (id, genre) VALUES
 
 INSERT INTO wgConnect (genre_id, mood_id)
 VALUES (1,2),  -- acoustic
-(19,5), -- club
-(20, 1), -- comedy
+(9,3), --blues
+(19,5),(19,8), -- club
+(20, 1), (20,6), -- comedy
+(22,8), --dance
+(45,8), --groove
+(48,1), --happy
+(56,5), --house
+(93,5), --party
+(105,3), --rainy-day
 (113,3), --sad
 (120, 2), --sleep
 (125, 2); --study
