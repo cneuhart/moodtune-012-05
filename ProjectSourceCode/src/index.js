@@ -602,6 +602,34 @@ app.get('/logout', async (req, res) => {
   
   });
   
+  //Global Statistics 
+  app.get('/globalstats', async (req, res) => {
+    if (await LoginTest(req) == false) {
+        res.status(400).redirect('/login');
+        return;
+    }
+
+    var topTracksQuery = `
+      SELECT track_name, COUNT(track_name) as frequency, artist_name, album_image_url, track_uri 
+      FROM recommendations
+      GROUP BY track_name, artist_name, album_image_url, track_uri
+      ORDER BY frequency DESC
+      LIMIT 20;
+    `;
+    
+    db.any(topTracksQuery)
+        .then(topTracks => {
+            res.render('pages/globalstats', {
+                trackdata: topTracks
+            });
+            // res.status(200).json(topTracks);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
   //handle all unmatched urls
   app.all('*', (req,res) => {
     res.redirect('/');
