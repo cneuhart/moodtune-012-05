@@ -288,12 +288,30 @@ app.get('/homepage', async (req, res) => {
   });
 
   app.get('/userprofile', async (req, res) => {
-    if(await LoginTest(req) == false){
-      res.status(400).redirect('/login')
-      return 0;
+    try {
+        // Ensure user is logged in
+        if (await LoginTest(req) == false) {
+            res.status(400).redirect('/login');
+            return;
+        }
+
+        // Fetch recommendations for the current user
+        const recommendations = await getUserRecommendations(req);
+
+        // Check if recommendations array is empty
+        if (recommendations.length === 0) {
+            // If recommendations array is empty, render userprofile.hbs with no recommendations message
+            res.render('pages/userprofile', { recommendations: null });
+        } else {
+            // If recommendations array is not empty, render userprofile.hbs with recommendations data
+            res.render('pages/userprofile', { recommendations: recommendations });
+        }
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error("Error fetching recommendations:", error);
+        res.status(500).render('error', { message: 'An error occurred while fetching recommendations.' });
     }
-    res.render('pages/userprofile');
-  });
+});
 
 app.post('/register', async (req,res) => {
   const username = req.body.username;
