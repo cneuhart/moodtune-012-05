@@ -621,6 +621,29 @@ app.get('/logout', async (req, res) => {
 
   }
 
+  async function getUserRecommendations(req) {
+    // Construct SQL query to fetch recommendations
+    const user = req.session.user;
+    const query = `
+        SELECT * FROM recommendations WHERE recommended_for = '${user}' limit 10;
+    `;
+
+    try {
+        // Execute the query to fetch recommendations
+        const recommendations = await db.manyOrNone(query);
+
+        console.log(recommendations)
+        return recommendations;
+
+        
+
+    } catch (error) {
+        // Handle any errors that occur during the database operation
+        console.error("Error fetching recommendations:", error);
+        throw error; // Rethrow the error to be caught by the caller
+    }
+  } 
+
   //recommendations POST route; create recommended playlist
   app.post('/recommendations', async (req,res) => {
 
