@@ -538,6 +538,43 @@ app.get('/logout', async (req, res) => {
       
     });
 
+  //recommendations route
+  app.get('/recommendations', async (req,res) => {
+   
+
+    //TEST IF USER IS LOGGED IN
+      //!should probably send an error message to login page on redirect
+    if(await LoginTest(req) == false){
+      res.status(400).redirect('/login')
+      return 0;
+    }
+
+    const savedToken = req.session.access_token;
+  
+    const stringinputs = req.query.inputs;
+  
+    const inputs = stringinputs.split(" ")
+  
+    spotifyCall.getTrackRecommendation(savedToken, inputs)
+    .then(results => {
+      //store recommendations in db
+      //do not need to await, recommendations showing on page does not depend on DB entry
+      storeRecommendations(req.session.user, results, stringinputs);
+
+      //render page with generated recommendations
+      res.render('pages/recommendations',{
+        data: results,
+        inputText: stringinputs
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error
+      })
+    });
+  
+  });
+
   async function storeRecommendations(recommended_for, results, genreArray){
 
     if(results.tracks == undefined){
