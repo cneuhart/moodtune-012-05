@@ -57,7 +57,7 @@ const proddbConfig = {
 
 
 // const db = pgp(dbConfig);
-const db = pgp(dbConfig);
+const db = pgp(proddbConfig);
 
 
 // test your database
