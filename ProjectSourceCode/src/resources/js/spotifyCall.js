@@ -103,18 +103,6 @@ async function getUserID(savedToken){
     return user.json()
 }
 
-// module.exports.getArtist = async function getArtist(savedToken, id){
-
-//     let artist = await fetch(`https://api.spotify.com/v1/artists/${id}
-//     `, {
-//         method: "GET",
-//         headers: { 
-//             'Authorization': 'Bearer ' + savedToken 
-//         }
-//     })
-
-//     return await artist.json();
-// }
 module.exports.getArtist = async function getArtist(savedToken, id){
     try {
         let response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {

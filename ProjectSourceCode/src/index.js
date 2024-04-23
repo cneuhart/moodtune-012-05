@@ -533,7 +533,6 @@ app.get('/logout', async (req, res) => {
 
       let trackName = results.tracks[track].name
       let artist = results.tracks[track].artists[0].name
-      // let artist_link = results.tracks[track].artists[0].external_urls.spotify
       let artist_uri = results.tracks[track].artists[0].uri
       let artist_id = results.tracks[track].artists[0].id
       let album_url = results.tracks[track].album.images[0].url
@@ -651,7 +650,6 @@ app.get('/logout', async (req, res) => {
           artistdata: data[0],
           trackdata: data[1],
         });
-        console.log(data[0]);
       })
       // if the query execution fails, send the error message instead
       .catch(error => {
