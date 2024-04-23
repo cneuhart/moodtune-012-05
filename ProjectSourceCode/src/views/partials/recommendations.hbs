@@ -76,7 +76,7 @@
                 <form id="recInput" method="GET" action="/">
                     <label>recommendations</label>
                     <input name="inputs" type="text">
-                    <input class="submitRecommendation" type="submit" value="Submit">
+                    <input type="submit" value="Submit">
                 </form>
                 <form id="recInput" method="GET" action="/">
                     <label for="inputs">Choose a mood:</label> 
@@ -92,19 +92,19 @@
                         <option value="road-trip">Long Drive</option>
                         <option value="french">French</option>
                         <option value="salsa samba">Spanish Dance</option>
-                        <input type="submit" class="submitRecommendation" value="Submit">
+                        <input type="submit" value="Submit">
                     </select>
                 </form>
             </div>
                 {{#if data}}
-                    <form id="recInput" method="POST" action="/recommendations">
+                    <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
                         <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
                         <input type="hidden" name="inputText" value="{{inputText}}">
                         <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{else}}
                     <form>
-                        <input id="recInput" class="addToSpotify" type="button" value="ADD PLAYLIST TO SPOTIFY">
+                        <input id="recInput" id="submitRecommendation" type="button" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{/if}}
         </div>
@@ -253,22 +253,5 @@
         background: linear-gradient(180deg, #ff96c2 0%, #f63696 100%);
         color: white;
         font-family: Arial black, Helvetica, sans-serif;
-        border: none
-    }
-    #fusionButton:hover{
-        background: linear-gradient(180deg, #ffb3d3 0%, #fa66b0 100%);
-    }
-    .submitRecommendation{
-        background: linear-gradient(180deg, #99ff96 0%, #36f640 100%);
-        border-radius: 0.5rem;
-        border: none;
-    }
-    .addToSpotify{
-        background: linear-gradient(180deg, #ff969b 0%, #f63636 100%);
-        border-radius: 0.5rem;
-        border: none;
-    }
-    .addToSpotify:hover{
-        background: linear-gradient(180deg, #ffbcbf 0%, #ff6b6b 100%);
     }
 </style>
