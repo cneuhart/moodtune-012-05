@@ -431,6 +431,10 @@ app.get('/logout', async (req, res) => {
       //IF USER REFUSED SPOTIFY ACCESS:
       //redirect to login with error
       if (accessToken == undefined){
+
+        //destroy session, logs user out to prevent access to other pages when this error is encountered
+        req.session.destroy();
+
         res.render("pages/login",{
           message: "Refused Spotify Integration: Re-login and accept to use moodtune.",
           error: true
