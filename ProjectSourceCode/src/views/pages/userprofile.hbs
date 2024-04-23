@@ -71,18 +71,18 @@ window.addEventListener('DOMContentLoaded', function() {
   <h2>Your Recommendations:</h2>
   <ul>
     {{#each recommendations}}
-      <li>
-        <p>Track Name: {{track_name}}</p>
-        <p>Artist: {{artist_name}}</p>
-        <p>Genre: {{genreInput}}</p>
-        <img src="{{album_image_url}}" alt="Album Cover">
-      </li>
+        <p>{{[0].genreinput}}</p>
+        <img src="{{[0].album_image_url}}" width="90" height="90">
+        <img src="{{[1].album_image_url}}" width="90" height="90">
+        <img src="{{[2].album_image_url}}" width="90" height="90">
+        <img src="{{[3].album_image_url}}" width="90" height="90">
+        <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
+            <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
+            <input type="hidden" name="inputText" value="{{[0].genreinput}}">
+            <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+        </form>
     {{/each}}
   </ul>
 {{else}}
   <p>No recommendations found.</p>
 {{/if}}
-
-
-{{!-- {{Settings}} --}}
-    {{!-- {{Filter Recommendations}} --}}

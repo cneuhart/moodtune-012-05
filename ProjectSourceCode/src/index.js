@@ -17,6 +17,7 @@ const { time } = require('console');
 //include local custom files/dependencies
 const OAuth = require('./resources/js/OAuth.js')
 const spotifyCall = require('./resources/js/spotifyCall.js');
+const { start } = require('repl');
 
 //id/secret stored in .env to prevent leaking id/secret
 const client_id = process.env.client_id;
@@ -247,10 +248,11 @@ app.get('/', async (req, res) => {
   }
 
   spotifyCall.getTrackRecommendation(savedToken, stringArrayMatchedInputs)
-  .then(results => {
+  .then(async results => {
     //store recommendations in db
     //do not need to await, recommendations showing on page does not depend on DB entry
-    storeRecommendations(req.session.user, results, stringArrayMatchedInputs);
+
+    storeRecommendations(req.session.user, results, stringArrayMatchedInputs, savedToken);
 
     //render page with generated recommendations
     res.render('pages/homepage',{
@@ -288,12 +290,30 @@ app.get('/homepage', async (req, res) => {
   });
 
   app.get('/userprofile', async (req, res) => {
-    if(await LoginTest(req) == false){
-      res.status(400).redirect('/login')
-      return 0;
+    try {
+        // Ensure user is logged in
+        if (await LoginTest(req) == false) {
+            res.status(400).redirect('/login');
+            return;
+        }
+
+        // Fetch recommendations for the current user
+        const recommendations = await getUserRecommendations(req);
+
+        // Check if recommendations array is empty
+        if (recommendations.length === 0) {
+            // If recommendations array is empty, render userprofile.hbs with no recommendations message
+            res.render('pages/userprofile', { recommendations: null });
+        } else {
+            // If recommendations array is not empty, render userprofile.hbs with recommendations data
+            res.render('pages/userprofile', { recommendations: recommendations });
+        }
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error("Error fetching recommendations:", error);
+        res.status(500).render('error', { message: 'An error occurred while fetching recommendations.' });
     }
-    res.render('pages/userprofile');
-  });
+});
 
 app.post('/register', async (req,res) => {
   const username = req.body.username;
@@ -520,7 +540,7 @@ app.get('/logout', async (req, res) => {
       
     });
 
-  async function storeRecommendations(recommended_for, results, genreArray){
+  async function storeRecommendations(recommended_for, results, genreArray, savedToken){
 
     if(results.tracks == undefined){
       return 0;
@@ -531,25 +551,48 @@ app.get('/logout', async (req, res) => {
 
     let appendQuery = "";
 
-    for(let track in results.tracks){
+    let generationID = await db.one("SELECT MAX(generationID) FROM recommendations");
+    if(generationID.max == null){
+      generationID = 1;
+    }
+    else{
+      generationID = generationID.max
+      generationID = generationID + 1;
+    }
 
+    for(let track in results.tracks){
       let trackName = results.tracks[track].name
       let artist = results.tracks[track].artists[0].name
+      let artist_uri = results.tracks[track].artists[0].uri
+      let artist_id = results.tracks[track].artists[0].id
       let album_url = results.tracks[track].album.images[0].url
       let uri = results.tracks[track].uri
       let recommended_for_result = recommended_for;
       let genreInput_result = genreInput
 
+      let artist_url;
+      let artist_json = await spotifyCall.getArtist(savedToken, artist_id);
+
+      if (artist_json.images && artist_json.images.length > 0 && artist_json.images[0].url) {
+          artist_url = artist_json.images[0].url;
+      } else {
+          artist_url = "";
+      }
+
       trackName = trackName.replace(/\'/g,'\'\'')
       artist = artist.replace(/\'/g,'\'\'')
+      artist_url = artist_url.replace(/\'/g,'\'\'')
       album_url = album_url.replace(/\'/g,'\'\'')
       uri = uri.replace(/\'/g,'\'\'')
       recommended_for_result = recommended_for_result.replace(/\'/g,'\'\'')
       genreInput_result = genreInput_result.replace(/\'/g,'\'\'')
 
       appendQuery = appendQuery.concat("(")
+      appendQuery = appendQuery.concat(`'${generationID}'` + ",")
       appendQuery = appendQuery.concat(`'${trackName}'` + ",")
       appendQuery = appendQuery.concat(`'${artist}'` + ",")
+      appendQuery = appendQuery.concat(`'${artist_uri}'` + ",")
+      appendQuery = appendQuery.concat(`'${artist_url}'` + ",")
       appendQuery = appendQuery.concat(`'${album_url}'` + ",")
       appendQuery = appendQuery.concat(`'${uri}'` + ",")
       appendQuery = appendQuery.concat(`'${recommended_for_result}'` + ",")
@@ -557,14 +600,74 @@ app.get('/logout', async (req, res) => {
       appendQuery = appendQuery.concat("),")
     }
 
-    
-    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, artist_uri, artist_image_url, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+
     insertQuery = insertQuery.concat(appendQuery);
     insertQuery = insertQuery.slice(0,-1) + ';';
 
     db.any(insertQuery)
 
   }
+
+  async function getUserRecommendations(req) {
+    // Construct SQL query to fetch recommendations
+    const user = req.session.user;
+    const query = `
+        SELECT * FROM recommendations WHERE recommended_for = '${user}' ORDER BY generationID DESC limit 100;
+    `;
+
+    try {
+        // Execute the query to fetch recommendations
+        const recommendations = await db.manyOrNone(query);
+
+        //convert simple JSON object into JSON object that splits each generation by its generationID into JSON arrays
+        let objectLength = Object.keys(recommendations).length;
+        let recArray = [];
+        let list = [];
+        let startObj;
+        let j = 0
+        for(let i = 0; i < objectLength; i++){
+          startObj = recommendations[i]
+          list = []
+          for(j = 0; j >= 0;j++){
+            obj = recommendations[i+j]
+            if(obj == undefined){
+              break;
+            }
+
+            if(obj.generationid != startObj.generationid){
+              //if startObj (start of new list) does not equal the subsequent object, end list to create new list
+              break;
+            }
+
+            let singleItem = {};
+
+            singleItem.id = obj.id,
+            singleItem.generationid =  obj.generationid,
+            singleItem.track_name =  obj.track_name,
+            singleItem.artist_name =  obj.artist_name,
+            singleItem.album_image_url =  obj.album_image_url,
+            singleItem.track_uri =  obj.track_uri,
+            singleItem.recommended_for =  obj.recommended_for,
+            singleItem.genreinput =  obj.genreinput
+
+            list.push(singleItem)
+          }
+          //subtract amount added from object
+          i = i + j
+          recArray.push(list)
+        }
+
+        return recArray;
+
+        
+
+    } catch (error) {
+        // Handle any errors that occur during the database operation
+        console.error("Error fetching recommendations:", error);
+        throw error; // Rethrow the error to be caught by the caller
+    }
+  } 
 
   //recommendations POST route; create recommended playlist
   app.post('/recommendations', async (req,res) => {
@@ -604,6 +707,57 @@ app.get('/logout', async (req, res) => {
   
   });
   
+  //Global Statistics 
+  app.get('/globalstats', async (req, res) => {
+    if (await LoginTest(req) == false) {
+        res.status(400).redirect('/login');
+        return;
+    }
+
+    var topArtistsQuery = `
+      SELECT artist_name, COUNT(artist_name) as frequency, album_image_url, artist_image_url, artist_uri
+      FROM recommendations  
+      GROUP BY artist_name, album_image_url, artist_image_url, artist_uri
+      ORDER BY frequency DESC
+      LIMIT 20;
+    `;
+    
+    var topTracksQuery = `
+      SELECT track_name, COUNT(track_name) as frequency, artist_name, album_image_url, track_uri 
+      FROM recommendations
+      GROUP BY track_name, artist_name, album_image_url, track_uri
+      ORDER BY frequency DESC
+      LIMIT 20;
+    `;
+
+    db.task('get-everything', task => {
+      return task.batch([
+        task.any(topArtistsQuery),
+        task.any(topTracksQuery),
+      ]);
+    })
+      // if query execution succeeds, query results can be obtained as shown below
+      .then(data => {
+        res.render('pages/globalstats', {
+          artistdata: data[0],
+          trackdata: data[1],
+        });
+      })
+      // if the query execution fails, send the error message instead
+      .catch(error => {
+        console.error(
+          'Internal Server Error (HTTP 500): Something went wrong!',
+          error
+        );
+        res.status('500').json({
+          topArtistsQuery: '',
+          topTracksQuery: '',
+          error,
+        });
+      });
+      
+});
+
   //handle all unmatched urls
   app.all('*', (req,res) => {
     res.redirect('/');

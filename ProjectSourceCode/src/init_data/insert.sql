@@ -30,7 +30,8 @@ INSERT INTO moods (id, mood) VALUES
 (118, 'swedish'),(119, 'synth-pop'),(120, 'tango'),(121, 'techno'),(122, 'trance'),
 (123, 'trip-hop'),(124, 'turkish'),(125, 'work-out'),(126, 'world-music'), 
 (127, 'calm'),(128, 'angry'),(129,'laugh'),(130,'energized'),(131,'romantic'),
-(132,'love');
+(132,'love'),(130,'japan'),(131,'japanese'),
+(132,'death'),(133,'iran'),(134,'india'),(135,'angry'),(136,'upset'),(137,'breakup');
 
 INSERT INTO genres (id, genre) VALUES 
 (1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
@@ -66,13 +67,36 @@ INSERT INTO genres (id, genre) VALUES
 
 do $$
     begin
-        for i in 1..50 loop
+        for i in 1..126 loop
             insert into wgConnect values(i,i);
         end loop;
     end;
 $$;
 
 INSERT INTO wgConnect (genre_id, mood_id)
+VALUES 
+(22,48), -- dance <- happy
+(84,48), -- party <- happy
+(63,130), -- j-dance <- japan
+(64,130), -- j-idol <- japan
+(65,130), -- j-pop <- japan
+(66,130), -- j-rock <- japan
+(63,131), -- j-dance <- japanese
+(64,131), -- j-idol <- japanese
+(65,131), -- j-pop <- japanese
+(66,131), -- j-rock <- japanese
+(24,132), -- death-metal <- death
+(62,133), -- iranian <- iran
+(58,134), -- indian <- india
+(24,135), -- death-metal <- angry
+(7,135), -- black-metal <- angry
+(104,136), -- sad <- upset
+(43,136), -- goth <- upset
+(35,136), -- emo <- upset
+(104,137), -- sad <- breakup
+(43,137), -- goth <- breakup
+(35,137) -- emo <- breakup
+;
 VALUES (1,127),(1,17),  -- acoustic
 (2,22), --afrobeat
 (3,128), --alt-rock
