@@ -1,42 +1,43 @@
 
-<div class="container">
+<div class="container text-center">
     <div class="card">
         <div class="card-body">
             
+            <h2 class="text-center">Profile</h1>
+
             <!-- Username Input Field -->
             <div>
-                <img class="center" id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
-                <input type="file" id="profilePicture" accept="image/png">
-                <button onclick="uploadProfilePicture()">Upload new picture</button>
+                <img class="center" id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="margin-top:1em; display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
+                <input class="form-control" type="file" id="profilePicture" accept="image/png">
+                <button class="form-control" onclick="uploadProfilePicture()">Upload new picture</button>
             </div>
 
-            <h1 class="text-center">Profile</h1>
-            <h5 class="text">Username: {{ Username }}</h5>
+            <h5 style="text-align:left; margin-left:2em;">Username: {{ Username }}</h5>
 
             {{!-- {{Profile Picture}} --}}
             
 
             {{!-- {{Bio/About Me}} --}}
-
-            <label for="AboutMe">About Me:</label>
-            <textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
-            <button onclick="publishAboutMe()">Publish</button>
-
-            <div>
-            
+            <div class="text-center" style="margin-top:3em">
+                <label for="AboutMe">About Me:</label>
+                <br/>
+                <textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
+                <br/>
+                <button onclick="publishAboutMe()">Publish</button>
             </div>
 
             
 
         </div>
     </div><!--
-    --><div class="card">
+    --><div class="card" style="width:30em">
         <div class="card-body">
             {{#if recommendations}}
-            <h2>Your Recommendations:</h2>
+            <h2 class="text-center">Your Recommendations:</h2>
             <ul>
                 {{#each recommendations}}
-                    <p>{{[0].genreinput}}</p>
+                <hr>
+                    <p style="text-align:left; margin-left:1.5em; font-weight:bold">{{[0].genreinput}}</p>
                     <img src="{{[0].album_image_url}}" width="90" height="90">
                     <img src="{{[1].album_image_url}}" width="90" height="90">
                     <img src="{{[2].album_image_url}}" width="90" height="90">
@@ -44,8 +45,9 @@
                     <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
                         <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
                         <input type="hidden" name="inputText" value="{{[0].genreinput}}">
-                        <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+                        <input class="form-control" style="margin-left:0" type="submit" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
+                <hr>
                 {{/each}}
             </ul>
             {{else}}
@@ -112,6 +114,8 @@
     }
 
     .card{
+        width:30em;
+        margin-left:4em;
         margin-top:4em;
         margin-right:4em;
         display:inline-block;
@@ -126,4 +130,39 @@
     .text{
         margin-left:1em;
     }
+
+    h5{
+        margin-top:3em;
+    }
+
+    input{
+        margin-top:1em;
+    }
+
+    textarea{
+        width:85%;
+    }
+
+    label{
+        margin-top:1em;
+    }
+
+    .form-control{
+        margin-left:auto;
+        margin-right:auto;
+        width:15em;
+    }
+
+    ul{
+        margin-top:1em;
+    }
+
+    h1{
+        font-weight: bold;
+    }
+
+    h2{
+        font-weight: bold;
+    }
+        
 </style>
