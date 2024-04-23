@@ -1,88 +1,129 @@
-<h1>User Profile</h1>
 
-<!-- Username Input Field -->
-<label for = "username">Username: {{ username }}</label>
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            
+            <!-- Username Input Field -->
+            <div>
+                <img class="center" id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
+                <input type="file" id="profilePicture" accept="image/png">
+                <button onclick="uploadProfilePicture()">Upload new picture</button>
+            </div>
 
-{{!-- {{Profile Picture}} --}}
-<label for="profilePicture">Profile Picture (use a screenshot):</label>
-<input type="file" id="profilePicture" accept="image/png">
+            <h1 class="text-center">Profile</h1>
+            <h5 class="text">Username: {{ Username }}</h5>
 
-<img id="uploadedImage" src="{{profilePicture}}" alt="Uploaded Image" style="display: none; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
+            {{!-- {{Profile Picture}} --}}
+            
 
-<button onclick="uploadProfilePicture()">Upload</button>
+            {{!-- {{Bio/About Me}} --}}
+
+            <label for="AboutMe">About Me:</label>
+            <textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
+            <button onclick="publishAboutMe()">Publish</button>
+
+            <div>
+            
+            </div>
+
+            
+
+        </div>
+    </div><!--
+    --><div class="card">
+        <div class="card-body">
+            {{#if recommendations}}
+            <h2>Your Recommendations:</h2>
+            <ul>
+                {{#each recommendations}}
+                    <p>{{[0].genreinput}}</p>
+                    <img src="{{[0].album_image_url}}" width="90" height="90">
+                    <img src="{{[1].album_image_url}}" width="90" height="90">
+                    <img src="{{[2].album_image_url}}" width="90" height="90">
+                    <img src="{{[3].album_image_url}}" width="90" height="90">
+                    <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
+                        <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
+                        <input type="hidden" name="inputText" value="{{[0].genreinput}}">
+                        <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+                    </form>
+                {{/each}}
+            </ul>
+            {{else}}
+            <p>No recommendations found.</p>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
 
 <script>
-function uploadProfilePicture() {
-    var input = document.getElementById('profilePicture');
-    var file = input.files[0];
+    function uploadProfilePicture() {
+        var input = document.getElementById('profilePicture');
+        var file = input.files[0];
 
-    if (file) {
-        if (file.type === 'image/png') {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var uploadedImage = document.getElementById('uploadedImage');
-                uploadedImage.src = e.target.result;
-                uploadedImage.style.display = 'block';
+        if (file) {
+            if (file.type === 'image/png') {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var uploadedImage = document.getElementById('uploadedImage');
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block';
 
-                localStorage.setItem('profilePicture', e.target.result);
-            };
-            reader.readAsDataURL(file);
+                    localStorage.setItem('profilePicture', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a PNG image.');
+            }
         } else {
-            alert('Please upload a PNG image.');
+            alert('Please select a file to upload.');
         }
-    } else {
-        alert('Please select a file to upload.');
     }
-}
 
-window.addEventListener('DOMContentLoaded', function() {
-    var uploadedImage = document.getElementById('uploadedImage');
-    if (localStorage.getItem('profilePicture')) {
-        uploadedImage.src = localStorage.getItem('profilePicture');
-        uploadedImage.style.display = 'block';
+    window.addEventListener('DOMContentLoaded', function() {
+        var uploadedImage = document.getElementById('uploadedImage');
+        if (localStorage.getItem('profilePicture')) {
+            uploadedImage.src = localStorage.getItem('profilePicture');
+            uploadedImage.style.display = 'block';
+        }
+    });
+    </script>
+
+
+
+
+
+    <script>
+    function publishAboutMe() {
+        var aboutMeContent = document.getElementById('AboutMe').value;
+        localStorage.setItem('aboutMeText', aboutMeContent);
     }
-});
-</script>
 
+    window.addEventListener('DOMContentLoaded', function() {
+        var aboutMeTextarea = document.getElementById('AboutMe');
+        if (localStorage.getItem('aboutMeText')) {
+            aboutMeTextarea.value = localStorage.getItem('aboutMeText');
+        }
+    });
+    </script>
 
-
-{{!-- {{Bio/About Me}} --}}
-<label for="AboutMe">About Me:</label>
-<textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
-
-<button onclick="publishAboutMe()">Publish</button>
-
-<script>
-function publishAboutMe() {
-    var aboutMeContent = document.getElementById('AboutMe').value;
-    localStorage.setItem('aboutMeText', aboutMeContent);
-}
-
-window.addEventListener('DOMContentLoaded', function() {
-    var aboutMeTextarea = document.getElementById('AboutMe');
-    if (localStorage.getItem('aboutMeText')) {
-        aboutMeTextarea.value = localStorage.getItem('aboutMeText');
+<style>
+    .container{
     }
-});
-</script>
 
-{{!-- Display previous recommendations --}}
-{{#if recommendations}}
-  <h2>Your Recommendations:</h2>
-  <ul>
-    {{#each recommendations}}
-        <p>{{[0].genreinput}}</p>
-        <img src="{{[0].album_image_url}}" width="90" height="90">
-        <img src="{{[1].album_image_url}}" width="90" height="90">
-        <img src="{{[2].album_image_url}}" width="90" height="90">
-        <img src="{{[3].album_image_url}}" width="90" height="90">
-        <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
-            <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
-            <input type="hidden" name="inputText" value="{{[0].genreinput}}">
-            <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
-        </form>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>No recommendations found.</p>
-{{/if}}
+    .card{
+        margin-top:4em;
+        margin-right:4em;
+        display:inline-block;
+        vertical-align: bottom;
+        height:35em;
+    }
+
+    .card-body{
+        display:block;
+    }
+
+    .text{
+        margin-left:1em;
+    }
+</style>
