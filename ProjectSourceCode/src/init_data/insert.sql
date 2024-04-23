@@ -29,9 +29,9 @@ INSERT INTO moods (id, mood) VALUES
 (113, 'soul'),(114, 'soundtracks'),(115, 'spanish'),(116, 'study'),(117, 'summer'),
 (118, 'swedish'),(119, 'synth-pop'),(120, 'tango'),(121, 'techno'),(122, 'trance'),
 (123, 'trip-hop'),(124, 'turkish'),(125, 'work-out'),(126, 'world-music'), 
-(127, 'calm'),(128, 'angry'),(129,'laugh'),(130,'energized'),(131,'romantic'),
-(132,'love'),(130,'japan'),(131,'japanese'),
-(132,'death'),(133,'iran'),(134,'india'),(135,'angry'),(136,'upset'),(137,'breakup');
+(127, 'calm'),(128, 'energized'),(129,'laugh'),(130,'japan'),(131,'japanese'),
+(132,'death'),(133,'iran'),(134,'india'),(135,'angry'),(136,'upset'),(137,'breakup'),
+(138,'romantic'),(139,'love');
 
 INSERT INTO genres (id, genre) VALUES 
 (1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
@@ -75,8 +75,46 @@ $$;
 
 INSERT INTO wgConnect (genre_id, mood_id)
 VALUES 
+(113,9), -- soul <- blues
+(28,16), -- disney <- children
+(1,17) -- acoustic <- chill
+(22,19), -- dance <- club
+(84,19), -- party <- club
+(2,22), -- afrobeat <- dance
+(19,22), -- club <- dance
+(45,22), -- groove <- dance
+(120,22), -- tango <- dance
+(16,28), -- children <- disney
+(45,39), -- groove <- funk
 (22,48), -- dance <- happy
 (84,48), -- party <- happy
+(117,48), -- summer <- happy
+(45,67), -- groove <- jazz
+(28,69), -- disney <- kids
+(16,69), -- children <- kids
+(56,84), -- house <- party
+(19,84), -- club <- party
+(96,86), -- rainy-day <- piano
+(111,86), -- sleep <- piano
+(116,86), -- study <- piano
+(104,96), -- sad <- rainy-day
+(9,104), -- blues <- sad
+(96,104), -- rainy-day <- sad
+(48,117), -- happy <- summer
+(1,127), -- acoustic<-calm
+(86,127), -- piano <- calm
+(111,127), -- sleep <- calm
+(116,127), -- study <- calm
+(31,128), -- dubstep <- energized
+(45,128), -- groove <- energized
+(48,128), -- happy <- energized
+(84,128), -- party <- energized
+(87,128), -- pop <- energized
+(93,128), -- punk <- energized
+(117,128),-- summer <- energized
+(125,128), -- work-out <- energized
+(94,128), -- punk-rock <- energized
+(20,129), -- comedy <- laugh
 (63,130), -- j-dance <- japan
 (64,130), -- j-idol <- japan
 (65,130), -- j-pop <- japan
@@ -88,40 +126,17 @@ VALUES
 (24,132), -- death-metal <- death
 (62,133), -- iranian <- iran
 (58,134), -- indian <- india
-(24,135), -- death-metal <- angry
+(3,135), -- alt-rock <- angry
 (7,135), -- black-metal <- angry
-(104,136), -- sad <- upset
+(24,135), -- death-metal <- angry
+(74,135), -- metal <- angry
 (43,136), -- goth <- upset
 (35,136), -- emo <- upset
-(104,137), -- sad <- breakup
+(104,136), -- sad <- upset
+(35,137), -- emo <- breakup
 (43,137), -- goth <- breakup
-(35,137) -- emo <- breakup
+(104,137), -- sad <- breakup
+(10,138), -- bossanova <- romantic
+(103,138), --romance <- romantic
+(103,139), -- romance <- love
 ;
-VALUES (1,127),(1,17),  -- acoustic
-(2,22), --afrobeat
-(3,128), --alt-rock
-(9,104), --blues
-(10,131), --bossanova
-(16,28), --children
-(19,84),(19,22), -- club
-(20, 136), (20,141), -- comedy
-(22,19),(22,120), --dance
-(28,16), --disney
-(31,130), --dubstep
-(45,22),(45,67),(45,130),(45,39), --groove
-(48,136),(48,117),(48,130), --happy
-(56,140), --house
-(74,128), --metal
-(84,19),(84,130), --party
-(86, 127), --piano
-(87,130), --pop
-(93,128), --punk
-(94,128), --punk-rock
-(96,104),(96,86), --rainy-day
-(103,131),(103,132), --romance
-(104,96), --sad
-(111, 127),(111,86), --sleep
-(113,9),() --soul
-(116, 127),(116,86), --study
-(117,130),(117,48), --summer
-(125,130); --work-out
