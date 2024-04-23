@@ -17,6 +17,7 @@ const { time } = require('console');
 //include local custom files/dependencies
 const OAuth = require('./resources/js/OAuth.js')
 const spotifyCall = require('./resources/js/spotifyCall.js');
+const { start } = require('repl');
 
 //id/secret stored in .env to prevent leaking id/secret
 const client_id = process.env.client_id;
@@ -247,10 +248,10 @@ app.get('/', async (req, res) => {
   }
 
   spotifyCall.getTrackRecommendation(savedToken, stringArrayMatchedInputs)
-  .then(results => {
+  .then(async results => {
     //store recommendations in db
     //do not need to await, recommendations showing on page does not depend on DB entry
-    storeRecommendations(req.session.user, results, stringArrayMatchedInputs);
+    await storeRecommendations(req.session.user, results, stringArrayMatchedInputs);
 
     //render page with generated recommendations
     res.render('pages/homepage',{
@@ -549,8 +550,16 @@ app.get('/logout', async (req, res) => {
 
     let appendQuery = "";
 
-    for(let track in results.tracks){
+    let generationID = await db.one("SELECT MAX(generationID) FROM recommendations");
+    if(generationID.max == null){
+      generationID = 1;
+    }
+    else{
+      generationID = generationID.max
+      generationID = generationID + 1;
+    }
 
+    for(let track in results.tracks){
       let trackName = results.tracks[track].name
       let artist = results.tracks[track].artists[0].name
       let album_url = results.tracks[track].album.images[0].url
@@ -566,6 +575,7 @@ app.get('/logout', async (req, res) => {
       genreInput_result = genreInput_result.replace(/\'/g,'\'\'')
 
       appendQuery = appendQuery.concat("(")
+      appendQuery = appendQuery.concat(`'${generationID}'` + ",")
       appendQuery = appendQuery.concat(`'${trackName}'` + ",")
       appendQuery = appendQuery.concat(`'${artist}'` + ",")
       appendQuery = appendQuery.concat(`'${album_url}'` + ",")
@@ -576,7 +586,7 @@ app.get('/logout', async (req, res) => {
     }
 
     
-    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+    let insertQuery = "INSERT INTO recommendations (generationID, track_name, artist_name, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
     insertQuery = insertQuery.concat(appendQuery);
     insertQuery = insertQuery.slice(0,-1) + ';';
 
@@ -588,15 +598,52 @@ app.get('/logout', async (req, res) => {
     // Construct SQL query to fetch recommendations
     const user = req.session.user;
     const query = `
-        SELECT * FROM recommendations WHERE recommended_for = '${user}' limit 10;
+        SELECT * FROM recommendations WHERE recommended_for = '${user}' ORDER BY generationID DESC limit 100;
     `;
 
     try {
         // Execute the query to fetch recommendations
         const recommendations = await db.manyOrNone(query);
 
-        console.log(recommendations)
-        return recommendations;
+        //convert simple JSON object into JSON object that splits each generation by its generationID into JSON arrays
+        let objectLength = Object.keys(recommendations).length;
+        let recArray = [];
+        let list = [];
+        let startObj;
+        let j = 0
+        for(let i = 0; i < objectLength; i++){
+          startObj = recommendations[i]
+          list = []
+          for(j = 0; j >= 0;j++){
+            obj = recommendations[i+j]
+            if(obj == undefined){
+              break;
+            }
+
+            if(obj.generationid != startObj.generationid){
+              //if startObj (start of new list) does not equal the subsequent object, end list to create new list
+              break;
+            }
+
+            let singleItem = {};
+
+            singleItem.id = obj.id,
+            singleItem.generationid =  obj.generationid,
+            singleItem.track_name =  obj.track_name,
+            singleItem.artist_name =  obj.artist_name,
+            singleItem.album_image_url =  obj.album_image_url,
+            singleItem.track_uri =  obj.track_uri,
+            singleItem.recommended_for =  obj.recommended_for,
+            singleItem.genreinput =  obj.genreinput
+
+            list.push(singleItem)
+          }
+          //subtract amount added from object
+          i = i + j
+          recArray.push(list)
+        }
+
+        return recArray;
 
         
 

@@ -125,6 +125,7 @@
                                 <td>{{> message}}</td>
                             </tr>
                         {{/if}}
+                        {{#if data.tracks}}
                         {{#each data.tracks}}
                             <tr>
                                 <td>{{ name }}</td>
@@ -133,6 +134,7 @@
                                 <td>{{album.name}}</td>
                             </tr>
                         {{/each}}
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
