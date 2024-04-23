@@ -1,7 +1,74 @@
 <div id="wrapper">
     <div id="leftSpacer"></div>
     <div id="leftSide">
-        <p>PREGENERATED SECTION</p>
+        <div id="preContainer">
+            <div id="fusionTitle">
+                <h1>FUSION</h1>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="anime jazz">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="iranian techno">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="electronic gospel">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="pop opera">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="hardcore piano">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="detroit-techno reggae">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="punk-rock trance">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="indie synth-pop">
+                    </form>
+                </div>
+            </div>
+            <div id="preModal">
+                <div id="modalInner">
+                    <form id="fusionInput" method="GET" action="/">
+                        <input id="fusionButton" type="submit" name="inputs" value="disco house">
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="rightSide">
         <div id="tableButtons">
@@ -9,33 +76,35 @@
                 <form id="recInput" method="GET" action="/">
                     <label>recommendations</label>
                     <input name="inputs" type="text">
-                    <input type="submit" value="Submit">
+                    <input class="submitRecommendation" type="submit" value="Submit">
                 </form>
                 <form id="recInput" method="GET" action="/">
-                    <label for="mood-list">Choose a mood:</label> 
-                    <select name="mood-list" id="mood-list">
+                    <label for="inputs">Choose a mood:</label> 
+                    <select name="inputs" id="mood-list">
                         <option value="happy">Happy</option>
                         <option value="sad">Sad</option>  
                         <option value="angry">Angry</option>
                         <option value="upset">Upset</option>   
-                        <option value="nostalgic">Nostalgic</option> 
                         <option value="party">Party</option> 
-                        <option value="feel-good">Feel-good</option> 
-                        <option value="breakup">Breakup</option> 
-                        <option value="long drive">Long Drive</option>
-                        <input type="submit" value="Submit">
+                        <option value="breakup">Breakup</option>
+                        <option value="work-out">Exercise/Workout</option>
+                        <option value="electronic edm drum-and-bass">Electronic</option>
+                        <option value="road-trip">Long Drive</option>
+                        <option value="french">French</option>
+                        <option value="salsa samba">Spanish Dance</option>
+                        <input type="submit" class="submitRecommendation" value="Submit">
                     </select>
                 </form>
             </div>
                 {{#if data}}
-                    <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
+                    <form id="recInput" method="POST" action="/recommendations">
                         <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
                         <input type="hidden" name="inputText" value="{{inputText}}">
                         <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{else}}
                     <form>
-                        <input id="recInput" id="submitRecommendation" type="button" value="ADD PLAYLIST TO SPOTIFY">
+                        <input id="recInput" class="addToSpotify" type="button" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{/if}}
         </div>
@@ -56,6 +125,7 @@
                                 <td>{{> message}}</td>
                             </tr>
                         {{/if}}
+                        {{#if data.tracks}}
                         {{#each data.tracks}}
                             <tr>
                                 <td>{{ name }}</td>
@@ -64,6 +134,7 @@
                                 <td>{{album.name}}</td>
                             </tr>
                         {{/each}}
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
@@ -81,6 +152,7 @@
     }
     #leftSpacer{
         width: 1.5%;
+        height: 100%;
     }
     #leftSide{
         width: 23.5%;
@@ -139,10 +211,64 @@
     #headRow{
         
     }
+    th{
+        width: 23rem;
+    }
     tr{
 
     }
     td{
-        
+        width: 23rem;
+    }
+    #preContainer{
+        border-radius: 1rem;
+        height: 90vh;
+        width: 100%;
+        background-color: white;
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+    }
+    #preModal{
+        border-radius: 1rem;
+        margin: 1rem;
+    }
+    #modalInner{
+        width: 100%;
+        height: 100%;
+    }
+    #fusionTitle{
+        width: 100%;
+        height: 10%;
+        display: flex;
+        justify-content: center;
+    }
+    #fusionInput{
+        height: 100%;
+        width: 100%;
+    }
+    #fusionButton{
+        width: 100%;
+        height: 7vh;
+        border-radius: 1rem;
+        background: linear-gradient(180deg, #ff96c2 0%, #f63696 100%);
+        color: white;
+        font-family: Arial black, Helvetica, sans-serif;
+        border: none
+    }
+    #fusionButton:hover{
+        background: linear-gradient(180deg, #ffb3d3 0%, #fa66b0 100%);
+    }
+    .submitRecommendation{
+        background: linear-gradient(180deg, #99ff96 0%, #36f640 100%);
+        border-radius: 0.5rem;
+        border: none;
+    }
+    .addToSpotify{
+        background: linear-gradient(180deg, #ff969b 0%, #f63636 100%);
+        border-radius: 0.5rem;
+        border: none;
+    }
+    .addToSpotify:hover{
+        background: linear-gradient(180deg, #ffbcbf 0%, #ff6b6b 100%);
     }
 </style>

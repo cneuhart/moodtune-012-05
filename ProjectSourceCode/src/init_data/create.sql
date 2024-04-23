@@ -7,6 +7,7 @@ CREATE TABLE users(
 DROP TABLE IF EXISTS recommendations;
 CREATE TABLE recommendations(
     id SERIAL PRIMARY KEY,  -- Unique identifier
+    generationID INT, -- ID per group of 10 songs generated
     track_name VARCHAR(255) NOT NULL,
     artist_name VARCHAR(255) NOT NULL,
     artist_uri VARCHAR(255) NOT NULL,
