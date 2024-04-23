@@ -29,7 +29,8 @@ INSERT INTO moods (id, mood) VALUES
 (113, 'soul'),(114, 'soundtracks'),(115, 'spanish'),(116, 'study'),(117, 'summer'),
 (118, 'swedish'),(119, 'synth-pop'),(120, 'tango'),(121, 'techno'),(122, 'trance'),
 (123, 'trip-hop'),(124, 'turkish'),(125, 'work-out'),(126, 'world-music'), 
-(127, 'calm'),(128, 'angry'),(129,'laugh');
+(127, 'calm'),(128, 'angry'),(129,'laugh'),(130,'energized'),(131,'romantic'),
+(132,'love');
 
 INSERT INTO genres (id, genre) VALUES 
 (1, 'acoustic'), (2, 'afrobeat'), (3, 'alt-rock'), (4, 'alternative'),
@@ -73,15 +74,30 @@ $$;
 
 INSERT INTO wgConnect (genre_id, mood_id)
 VALUES (1,127),(1,17),  -- acoustic
+(2,22), --afrobeat
+(3,128), --alt-rock
 (9,104), --blues
+(10,131), --bossanova
+(16,28), --children
 (19,84),(19,22), -- club
 (20, 136), (20,141), -- comedy
-(22,19), --dance
-(45,22), --groove
-(48,136), --happy
+(22,19),(22,120), --dance
+(28,16), --disney
+(31,130), --dubstep
+(45,22),(45,67),(45,130),(45,39), --groove
+(48,136),(48,117),(48,130), --happy
 (56,140), --house
-(84,19), --party
-(96,104), --rainy-day
+(74,128), --metal
+(84,19),(84,130), --party
+(86, 127), --piano
+(87,130), --pop
+(93,128), --punk
+(94,128), --punk-rock
+(96,104),(96,86), --rainy-day
+(103,131),(103,132), --romance
 (104,96), --sad
-(111, 127), --sleep
-(116, 127); --study
+(111, 127),(111,86), --sleep
+(113,9),() --soul
+(116, 127),(116,86), --study
+(117,130),(117,48), --summer
+(125,130); --work-out
