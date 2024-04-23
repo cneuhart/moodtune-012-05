@@ -14,22 +14,21 @@
       <div id="tableDiv">
       <table class="table table-striped table-bordered">
           <thead>
+              <th>#</th>
               <th>artist name</th>
-              <th>artist popularity</th>
+              <th>times recommended</th>
               <th>artist image</th>
-              <th></th>
           </thead>
-          {{#each artistdata.items}}
+          {{#each artistdata}}
 
               <tr>
-                  <td>{{name}}</td>
-                  <td>{{popularity}}</td>
+                  <td>{{@index}}</td>
+                  <td><a href="{{this.artist_uri}}">{{this.artist_name}}</a></td>
+                  <td>{{this.frequency}}</td>
                   <td>
-                      <img src="{{images.[0].url}}" width="90" height="90">
+                      <img src="{{this.artist_image_url}}" width="90" height="90">
                   </td>
-                  <td>
-
-                  </td>
+                  
               </tr>
 
           {{/each}}
@@ -43,8 +42,9 @@
               <th>#</th>
               <th>track name</th>
               <th>artist name</th>
+              <th>times recommended</th>
               <th>image</th>
-              <th>frequency</th>
+              
           </thead>
           {{#each trackdata}}
 
@@ -52,10 +52,11 @@
                   <td>{{@index}}</td>
                   <td><a href="{{this.track_uri}}">{{this.track_name}}</a></td>
                   <td>{{this.artist_name}}</td>
+                  <td>{{this.frequency}}</td>
                   <td>
                       <img src="{{this.album_image_url}}" width="90" height="90">
                   </td>
-                  <td>{{this.frequency}}</td>
+                  
               </tr>
 
           {{/each}}

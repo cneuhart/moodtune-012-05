@@ -103,6 +103,39 @@ async function getUserID(savedToken){
     return user.json()
 }
 
+// module.exports.getArtist = async function getArtist(savedToken, id){
+
+//     let artist = await fetch(`https://api.spotify.com/v1/artists/${id}
+//     `, {
+//         method: "GET",
+//         headers: { 
+//             'Authorization': 'Bearer ' + savedToken 
+//         }
+//     })
+
+//     return await artist.json();
+// }
+module.exports.getArtist = async function getArtist(savedToken, id){
+    try {
+        let response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+            method: "GET",
+            headers: { 
+                'Authorization': 'Bearer ' + savedToken 
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch artist');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching artist:', error);
+        throw error;
+    }
+}
+
+
 async function createEmptyPlaylist(savedToken, userID, genreInput){
 
     let createdPlaylist = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {

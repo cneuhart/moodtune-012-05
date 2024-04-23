@@ -248,7 +248,7 @@ app.get('/', async (req, res) => {
   .then(results => {
     //store recommendations in db
     //do not need to await, recommendations showing on page does not depend on DB entry
-    storeRecommendations(req.session.user, results, stringArrayMatchedInputs);
+    storeRecommendations(req.session.user, results, stringArrayMatchedInputs, savedToken);
 
     //render page with generated recommendations
     res.render('pages/homepage',{
@@ -518,7 +518,7 @@ app.get('/logout', async (req, res) => {
       
     });
 
-  async function storeRecommendations(recommended_for, results, genreArray){
+  async function storeRecommendations(recommended_for, results, genreArray, savedToken){
 
     if(results.tracks == undefined){
       return 0;
@@ -533,13 +533,26 @@ app.get('/logout', async (req, res) => {
 
       let trackName = results.tracks[track].name
       let artist = results.tracks[track].artists[0].name
+      // let artist_link = results.tracks[track].artists[0].external_urls.spotify
+      let artist_uri = results.tracks[track].artists[0].uri
+      let artist_id = results.tracks[track].artists[0].id
       let album_url = results.tracks[track].album.images[0].url
       let uri = results.tracks[track].uri
       let recommended_for_result = recommended_for;
       let genreInput_result = genreInput
 
+      let artist_url;
+      let artist_json = await spotifyCall.getArtist(savedToken, artist_id);
+
+      if (artist_json.images && artist_json.images.length > 0 && artist_json.images[0].url) {
+          artist_url = artist_json.images[0].url;
+      } else {
+          artist_url = "";
+      }
+
       trackName = trackName.replace(/\'/g,'\'\'')
       artist = artist.replace(/\'/g,'\'\'')
+      artist_url = artist_url.replace(/\'/g,'\'\'')
       album_url = album_url.replace(/\'/g,'\'\'')
       uri = uri.replace(/\'/g,'\'\'')
       recommended_for_result = recommended_for_result.replace(/\'/g,'\'\'')
@@ -548,6 +561,8 @@ app.get('/logout', async (req, res) => {
       appendQuery = appendQuery.concat("(")
       appendQuery = appendQuery.concat(`'${trackName}'` + ",")
       appendQuery = appendQuery.concat(`'${artist}'` + ",")
+      appendQuery = appendQuery.concat(`'${artist_uri}'` + ",")
+      appendQuery = appendQuery.concat(`'${artist_url}'` + ",")
       appendQuery = appendQuery.concat(`'${album_url}'` + ",")
       appendQuery = appendQuery.concat(`'${uri}'` + ",")
       appendQuery = appendQuery.concat(`'${recommended_for_result}'` + ",")
@@ -555,8 +570,7 @@ app.get('/logout', async (req, res) => {
       appendQuery = appendQuery.concat("),")
     }
 
-    
-    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, artist_uri, artist_image_url, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
     insertQuery = insertQuery.concat(appendQuery);
     insertQuery = insertQuery.slice(0,-1) + ';';
 
@@ -609,6 +623,14 @@ app.get('/logout', async (req, res) => {
         return;
     }
 
+    var topArtistsQuery = `
+      SELECT artist_name, COUNT(artist_name) as frequency, album_image_url, artist_image_url, artist_uri
+      FROM recommendations  
+      GROUP BY artist_name, album_image_url, artist_image_url, artist_uri
+      ORDER BY frequency DESC
+      LIMIT 20;
+    `;
+    
     var topTracksQuery = `
       SELECT track_name, COUNT(track_name) as frequency, artist_name, album_image_url, track_uri 
       FROM recommendations
@@ -616,18 +638,34 @@ app.get('/logout', async (req, res) => {
       ORDER BY frequency DESC
       LIMIT 20;
     `;
-    
-    db.any(topTracksQuery)
-        .then(topTracks => {
-            res.render('pages/globalstats', {
-                trackdata: topTracks
-            });
-            // res.status(200).json(topTracks);
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).send('Internal Server Error');
+
+    db.task('get-everything', task => {
+      return task.batch([
+        task.any(topArtistsQuery),
+        task.any(topTracksQuery),
+      ]);
+    })
+      // if query execution succeeds, query results can be obtained as shown below
+      .then(data => {
+        res.render('pages/globalstats', {
+          artistdata: data[0],
+          trackdata: data[1],
         });
+        console.log(data[0]);
+      })
+      // if the query execution fails, send the error message instead
+      .catch(error => {
+        console.error(
+          'Internal Server Error (HTTP 500): Something went wrong!',
+          error
+        );
+        res.status('500').json({
+          topArtistsQuery: '',
+          topTracksQuery: '',
+          error,
+        });
+      });
+      
 });
 
   //handle all unmatched urls
