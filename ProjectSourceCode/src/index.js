@@ -298,6 +298,7 @@ app.get('/homepage', async (req, res) => {
 
         // Fetch recommendations for the current user
         const recommendations = await getUserRecommendations(req);
+        const username = req.session.user;
 
         // Check if recommendations array is empty
         if (recommendations.length === 0) {
@@ -305,7 +306,10 @@ app.get('/homepage', async (req, res) => {
             res.render('pages/userprofile', { recommendations: null });
         } else {
             // If recommendations array is not empty, render userprofile.hbs with recommendations data
-            res.render('pages/userprofile', { recommendations: recommendations });
+            res.render('pages/userprofile', { 
+              username: username,
+              recommendations: recommendations
+             });
         }
     } catch (error) {
         // Handle any errors that occur during the process
