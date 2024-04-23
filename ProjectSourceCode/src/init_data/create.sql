@@ -10,6 +10,8 @@ CREATE TABLE recommendations(
     generationID INT, -- ID per group of 10 songs generated
     track_name VARCHAR(255) NOT NULL,
     artist_name VARCHAR(255) NOT NULL,
+    artist_uri VARCHAR(255) NOT NULL,
+    artist_image_url VARCHAR(255) NOT NULL,
     album_image_url VARCHAR(1000) NOT NULL,
     track_uri VARCHAR(255) NOT NULL,
     recommended_for VARCHAR(50),  -- Foreign key referencing user ID
