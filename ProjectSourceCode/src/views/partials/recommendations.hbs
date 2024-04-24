@@ -1,86 +1,85 @@
 <div id="wrapper">
-    <div id="leftSpacer"></div>
-    <div id="leftSide">
+    <div class="card" id="leftSide">
         <div id="preContainer">
-            <div id="fusionTitle">
-                <h1>FUSION</h1>
-            </div>
+            
+            <h1 id="fusionTitle">FUSION</h1>
+            
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="anime jazz">
+                        <input id="fusionButton" type="submit" name="inputs" value="Anime jazz">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="iranian techno">
+                        <input id="fusionButton" type="submit" name="inputs" value="Iranian techno">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="electronic gospel">
+                        <input id="fusionButton" type="submit" name="inputs" value="Electronic gospel">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="pop opera">
+                        <input id="fusionButton" type="submit" name="inputs" value="Pop opera">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="hardcore piano">
+                        <input id="fusionButton" type="submit" name="inputs" value="Hardcore piano">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="detroit-techno reggae">
+                        <input id="fusionButton" type="submit" name="inputs" value="Detroit-techno reggae">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="punk-rock trance">
+                        <input id="fusionButton" type="submit" name="inputs" value="Punk-rock trance">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="indie synth-pop">
+                        <input id="fusionButton" type="submit" name="inputs" value="Indie synth-pop">
                     </form>
                 </div>
             </div>
             <div id="preModal">
                 <div id="modalInner">
                     <form id="fusionInput" method="GET" action="/">
-                        <input id="fusionButton" type="submit" name="inputs" value="disco house">
+                        <input id="fusionButton" type="submit" name="inputs" value="Disco house">
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <div id="rightSide">
-        <div id="tableButtons">
+        <div class="card" id="tableButtons">
             <div id="recSelectors">
                 <form id="recInput" method="GET" action="/">
-                    <label>recommendations</label>
-                    <input name="inputs" type="text">
+                    <label style="font-weight:bold; margin-left:0em;">Recommendations</label>
+                    <input style="width:8em;" name="inputs" type="text">
                     <input class="submitRecommendation" type="submit" value="Submit">
                 </form>
                 <form id="recInput" method="GET" action="/">
-                    <label for="inputs">Choose a mood:</label> 
-                    <select name="inputs" id="mood-list">
+                    <label style="font-weight:bold; margin-left:1em; margin-top:0.2em;" for="inputs">Choose a mood:</label> 
+                    <select style="width:6em;" name="inputs" id="mood-list">
                         <option value="happy">Happy</option>
                         <option value="sad">Sad</option>  
                         <option value="angry">Angry</option>
@@ -92,31 +91,33 @@
                         <option value="road-trip">Long Drive</option>
                         <option value="french">French</option>
                         <option value="salsa samba">Spanish Dance</option>
-                        <input type="submit" class="submitRecommendation" value="Submit">
+                        <input style="margin-right:-4em; margin-left:0.3em;" type="submit" class="submitRecommendation" value="Submit">
                     </select>
                 </form>
-            </div>
                 {{#if data}}
                     <form id="recInput" method="POST" action="/recommendations">
                         <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
                         <input type="hidden" name="inputText" value="{{inputText}}">
-                        <input type="submit" value="ADD PLAYLIST TO SPOTIFY">
+                        <input style="margin-top:0.2em; margin-left:6em;" id="addToPlaylist" type="submit" value="ADD PLAYLIST TO SPOTIFY">
+
                     </form>
                 {{else}}
                     <form>
-                        <input id="recInput" class="addToSpotify" type="button" value="ADD PLAYLIST TO SPOTIFY">
+                        <input style="margin-top:-0.4em; margin-left:6em;" id="addToPlaylist" class="addToSpotify" type="button" value="ADD PLAYLIST TO SPOTIFY">
                     </form>
                 {{/if}}
+            </div>
+                
         </div>
         <div>
             <div id="tableContainer">
                 <table id="table">
                     <thead id="tableHead">
                         <tr id="headRow">
-                            <th>track name</th>
-                            <th>image</th>
-                            <th>artist name</th>
-                            <th>album</th>
+                            <th>Track name</th>
+                            <th>Image</th>
+                            <th>Artist name</th>
+                            <th>Album</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -145,6 +146,7 @@
 
 
 <style>
+
     #wrapper{
         display:inline-flex;
         height: 100%;
@@ -155,8 +157,10 @@
         height: 100%;
     }
     #leftSide{
+        margin-top:1em;
+        margin-left:1em;
         width: 23.5%;
-        height: 100%;
+        height: 97%;
     }
     #rightSide{
         width: 73.5%;
@@ -180,6 +184,7 @@
     }
     #recSelectors{
         display: inline-flex;
+        margin-top:0.35em;
     }
     #recInput{
         padding-right: 1rem;
@@ -230,29 +235,33 @@
     }
     #preModal{
         border-radius: 1rem;
-        margin: 1rem;
+        margin-top: 0.75em;
+        margin-left:1em;
+        margin-right:1em;
     }
     #modalInner{
         width: 100%;
         height: 100%;
     }
     #fusionTitle{
+        font-weight: bold;
         width: 100%;
         height: 10%;
         display: flex;
         justify-content: center;
+        margin-bottom:-0.25em;
     }
     #fusionInput{
         height: 100%;
         width: 100%;
     }
     #fusionButton{
+        font-weight:bold;
         width: 100%;
         height: 7vh;
         border-radius: 1rem;
-        background: linear-gradient(180deg, #ff96c2 0%, #f63696 100%);
+        background: black;
         color: white;
-        font-family: Arial black, Helvetica, sans-serif;
         border: none
     }
     #fusionButton:hover{
@@ -271,4 +280,12 @@
     .addToSpotify:hover{
         background: linear-gradient(180deg, #ffbcbf 0%, #ff6b6b 100%);
     }
+    #addToPlaylist{
+        background: url(../../resources/img/addToSpotifyPlaylist.png);
+        background-size: 18.2em;
+        height:2.8em;
+        width:18.2em;
+        color: rgba(0,0,0,0);
+    }
+
 </style>
