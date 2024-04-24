@@ -72,7 +72,7 @@ module.exports.getTrackRecommendation = async function getTrackRecommendation(sa
             'Authorization': 'Bearer ' + savedToken 
         }
     });
-
+    
     return await result.json();
 }
 
