@@ -18,7 +18,7 @@
             
 
             {{!-- {{Bio/About Me}} --}}
-            <div class="text-center" style="margin-top:3em">
+            <div style="margin-top:1em; text-align: left; margin-left:2.5em;">
                 <label for="AboutMe">About Me:</label>
                 <br/>
                 <textarea id="AboutMe" name="About Me" placeholder="Write something about yourself">{{aboutMe}}</textarea>
@@ -26,6 +26,11 @@
                 <button onclick="publishAboutMe()">Publish</button>
             </div>
 
+            <div style="margin-top:3em">
+                <a style="margin-left:10px; color:rgb(0, 0, 0)" href="/logout">
+                    logout
+                </a>
+            </div>
             
 
         </div>
@@ -132,7 +137,7 @@
     }
 
     h5{
-        margin-top:3em;
+        margin-top:1.5em;
     }
 
     input{
@@ -154,7 +159,7 @@
     }
 
     ul{
-        margin-top:1em;
+        margin-top:0em;
     }
 
     h1{
