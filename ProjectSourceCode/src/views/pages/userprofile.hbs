@@ -33,26 +33,37 @@
     --><div class="card" style="width:30em">
         <div class="card-body">
             {{#if recommendations}}
-            <h2 class="text-center">Your Recommendations:</h2>
-            <ul>
-                {{#each recommendations}}
-                <hr>
-                    <p style="text-align:left; margin-left:1.5em; font-weight:bold">{{[0].genreinput}}</p>
-                    <img src="{{[0].album_image_url}}" width="90" height="90">
-                    <img src="{{[1].album_image_url}}" width="90" height="90">
-                    <img src="{{[2].album_image_url}}" width="90" height="90">
-                    <img src="{{[3].album_image_url}}" width="90" height="90">
-                    <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
-                        <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
-                        <input type="hidden" name="inputText" value="{{[0].genreinput}}">
-                        <input class="form-control" style="margin-left:0" type="submit" value="ADD PLAYLIST TO SPOTIFY">
-                    </form>
-                <hr>
-                {{/each}}
-            </ul>
+                <h2 class="text-center">Your Recommendations:</h2>
             {{else}}
             <p>No recommendations found.</p>
             {{/if}}
+            <div id="recContainer">
+                {{#if recommendations}}
+                <ul>
+                    {{#each recommendations}}
+                    <hr>
+                    <div id="recTitle">
+                        <p style="text-align:left; margin-left:1.5em; font-weight:bold">{{[0].genreinput}}</p>
+                    </div>
+                    <div id="recImages">
+                        <img src="{{[0].album_image_url}}" width="90" height="90">
+                        <img src="{{[1].album_image_url}}" width="90" height="90">
+                        <img src="{{[2].album_image_url}}" width="90" height="90">
+                        <img src="{{[3].album_image_url}}" width="90" height="90">
+                    </div>
+                    <div id="addToSpotify">
+                        <form id="recInput" id="submitRecommendation" method="POST" action="/recommendations">
+                            <input type="hidden" name="spotifyURIs" value="{{#each []}}{{ track_uri }},{{/each}}">
+                            <input type="hidden" name="inputText" value="{{[0].genreinput}}">
+                            <input class="form-control" style="margin-left:0" type="submit" value="ADD PLAYLIST TO SPOTIFY">
+                        </form>
+                    </div>
+                    <hr>
+                    {{/each}}
+                </ul>
+                {{/if}}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -164,5 +175,23 @@
     h2{
         font-weight: bold;
     }
-        
+    .card-body{
+        height: 100%;
+    }
+    #recContainer{
+        overflow-y: scroll;
+        height: 94%;
+        scrollbar-width: thin;
+    }
+    #recTitle{
+
+    }
+    #recImages{
+        display: flex;
+        justify-content: center;
+    }
+    #addToSpotify{
+        display: flex;
+        justify-content: center;
+    }
 </style>
