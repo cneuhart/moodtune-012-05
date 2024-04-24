@@ -600,7 +600,7 @@ app.get('/logout', async (req, res) => {
       appendQuery = appendQuery.concat("),")
     }
 
-    let insertQuery = "INSERT INTO recommendations (track_name, artist_name, artist_uri, artist_image_url, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
+    let insertQuery = "INSERT INTO recommendations (generationID, track_name, artist_name, artist_uri, artist_image_url, album_image_url, track_uri, recommended_for, genreInput) VALUES ";
 
     insertQuery = insertQuery.concat(appendQuery);
     insertQuery = insertQuery.slice(0,-1) + ';';
