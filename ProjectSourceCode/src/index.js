@@ -304,7 +304,10 @@ app.get('/homepage', async (req, res) => {
         // Check if recommendations array is empty
         if (recommendations.length === 0) {
             // If recommendations array is empty, render userprofile.hbs with no recommendations message
-            res.render('pages/userprofile', { recommendations: null });
+            res.render('pages/userprofile', { 
+              username: username,
+              recommendations: null 
+            });
         } else {
             // If recommendations array is not empty, render userprofile.hbs with recommendations data
             res.render('pages/userprofile', { 
