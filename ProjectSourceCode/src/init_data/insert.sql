@@ -77,7 +77,7 @@ INSERT INTO wgConnect (genre_id, mood_id)
 VALUES 
 (113,9), -- soul <- blues
 (28,16), -- disney <- children
-(1,17) -- acoustic <- chill
+(1,17), -- acoustic <- chill
 (22,19), -- dance <- club
 (84,19), -- party <- club
 (2,22), -- afrobeat <- dance
@@ -138,5 +138,5 @@ VALUES
 (104,137), -- sad <- breakup
 (10,138), -- bossanova <- romantic
 (103,138), --romance <- romantic
-(103,139), -- romance <- love
+(103,139) -- romance <- love
 ;
