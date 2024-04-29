@@ -1,16 +1,52 @@
 <script type="text/javascript" src="../../resources/js/statistics.js"></script>
+<script>
+  // Function to save selected value to local storage
+  function saveSelectedValue() {
+    var selectElement = document.getElementById("time_range");
+    var selectedValue = selectElement.value;
+    localStorage.setItem("selectedValue", selectedValue);
+  }
 
+  // Function to load selected value from local storage
+  function loadSelectedValue() {
+    var selectElement = document.getElementById("time_range");
+    var selectedValue = localStorage.getItem("selectedValue");
+    if (selectedValue) {
+      selectElement.value = selectedValue;
+    }
+  }
+
+  // Function to save selected tab to local storage
+  function saveSelectedTab() {
+    var selectedTab = document.querySelector('.nav-tabs .active').id;
+    localStorage.setItem("selectedTab", selectedTab);
+  }
+
+  // Function to load selected tab from local storage
+  function loadSelectedTab() {
+    var selectedTab = localStorage.getItem("selectedTab");
+    if (selectedTab) {
+      document.getElementById(selectedTab).click();
+    }
+  }
+
+  // Call the loadSelectedValue and loadSelectedTab functions when the page loads
+  window.onload = function() {
+    loadSelectedValue();
+    loadSelectedTab();
+  };
+</script>
 <div id="wrapper">
   <div id="selectorHeader">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Artists</button>
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="saveSelectedTab()">Artists</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Tracks</button>
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="saveSelectedTab()">Tracks</button>
       </li>
     </ul>
-    <form method="GET" action="/statistics">
+    <form method="GET" action="/statistics" onsubmit="saveSelectedValue()">
       <label>statistics</label>
         <select name="time_range" id="time_range">
             <option value="short_term">short</option>
