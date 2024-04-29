@@ -72,12 +72,12 @@
     <div id="rightSide">
         <div class="card" id="tableButtons">
             <div id="recSelectors">
-                <form id="recInput" method="GET" action="/">
+                <form id="recInput" class="recInput" method="GET" action="/">
                     <label style="font-weight:bold; margin-left:0em;">Recommendations:</label>
                     <input style="width:12em;" name="inputs" type="text" placeholder="What are you looking for?">
                     <input class="submitRecommendation" type="submit" value="Submit">
                 </form>
-                <form id="recInput" method="GET" action="/">
+                <form id="recInput" class="recInput" method="GET" action="/">
                     <label style="font-weight:bold; margin-left:1em; margin-top:0.2em;" for="inputs">Choose a mood:</label> 
                     <select style="width:6em;" name="inputs" id="mood-list">
                         <option value="happy">Happy</option>
@@ -94,20 +94,20 @@
                         <input style="margin-right:-4em; margin-left:0.3em;" type="submit" class="submitRecommendation" value="Submit">
                     </select>
                 </form>
+            </div>
+            <div id="playlistButton">
                 {{#if data}}
-                    <form id="recInput" method="POST" action="/recommendations">
+                    <form method="POST" action="/recommendations">
                         <input type="hidden" name="spotifyURIs" value="{{#each data.tracks}}{{ uri }},{{/each}}">
                         <input type="hidden" name="inputText" value="{{inputText}}">
-                        <input style="margin-top:0.2em; margin-left:6em;" id="addToPlaylist" type="submit" value="ADD PLAYLIST TO SPOTIFY">
-
+                        <input id="addToPlaylist" type="image" alt="submit" src="../../resources/img/addToSpotifyPlaylist.png">
                     </form>
                 {{else}}
                     <form>
-                        <input style="margin-top:-0.4em; margin-left:6em;" id="addToPlaylist" class="addToSpotify" type="button" value="ADD PLAYLIST TO SPOTIFY">
+                        <input id="addToPlaylist" type="image" alt="submit" src="../../resources/img/addToSpotifyPlaylist.png">
                     </form>
                 {{/if}}
             </div>
-                
         </div>
         <div>
             <div id="tableContainer">
@@ -172,7 +172,7 @@
     #tableButtons {
         justify-content: space-between;
         align-items: center;
-        display: inline-flex;
+        display: inline-block;
         border-radius: 1rem;
         background-color: white;
         width: 100%;
@@ -180,14 +180,16 @@
         padding: 1rem;
         margin-top: 1rem;
         margin: 1rem;
-        
+        min-height: 5.5rem;
     }
     #recSelectors{
         display: inline-flex;
-        margin-top:0.35em;
+        
     }
     #recInput{
         padding-right: 1rem;
+        display:flex;
+        padding-top: 0.75rem;
     }
     #tableContainer{
         width: 100%;
@@ -250,6 +252,7 @@
         display: flex;
         justify-content: center;
         margin-bottom:-0.25em;
+        min-height: 5.5rem;
     }
     #fusionInput{
         height: 100%;
@@ -262,7 +265,8 @@
         border-radius: 1rem;
         background: black;
         color: white;
-        border: none
+        border: none;
+        min-height: 3rem;
     }
     #fusionButton:hover{
         background: linear-gradient(180deg, #ffb3d3 0%, #fa66b0 100%);
@@ -272,20 +276,19 @@
         border-radius: 0.5rem;
         border: none;
     }
-    .addToSpotify{
-        background: linear-gradient(180deg, #ff969b 0%, #f63636 100%);
-        border-radius: 0.5rem;
-        border: none;
-    }
-    .addToSpotify:hover{
-        background: linear-gradient(180deg, #ffbcbf 0%, #ff6b6b 100%);
-    }
     #addToPlaylist{
-        background: url(../../resources/img/addToSpotifyPlaylist.png);
-        background-size: 18.2em;
         height:2.8em;
         width:18.2em;
-        color: rgba(0,0,0,0);
+    }
+    #playlistButton{
+        float:right;
+        width: 25%;
+        display: flex;
+        justify-content: center;
+        padding-top: 0.3rem;
+    }
+    .recInput{
+        
     }
 
 </style>
