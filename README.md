@@ -1,6 +1,6 @@
 # moodtune-012-05
 
-*moodtune* is a music generation application that allows users to input their mood or general situation and get back a tailored music recommendation playlist that they can add to their spotify account.
+*moodtune* is a music recommendation application that allows users to input their mood or general situation and get back a tailored music recommendation playlist that they can add to their spotify account.
 
 ## Contributors
 * Conner Neuhart
@@ -14,6 +14,19 @@ written in javascript, with handlebars for passing data into HTML and formatting
 
 ## Running the application
 * clone repo
+* create .env file in /ProjectSourceCode/ folder
+    * must input own session_secret, Spotify API client_id, and Spotify API client_secret if running locally
+    * database credentials
+        * POSTGRES_USER="postgres"
+        * POSTGRES_PASSWORD="pwd"
+        * POSTGRES_DB="users_db"
+
+    * Node vars
+        * SESSION_SECRET=""
+        * client_id = ""
+        * client_secret = ""
+        * host="db"
+* cd to the /ProjectSourceCode/ folder
 * "npm init"
 * "docker compose up"
 
