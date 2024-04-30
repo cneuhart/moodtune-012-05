@@ -18,7 +18,7 @@ written in javascript, with handlebars for passing data into HTML and formatting
 * go to https://developer.spotify.com/dashboard
 * click "create app" button
 * input custom app name and description
-* set redirect URI to "localhost:3000/callback"
+* set redirect URI to "http://localhost:3000/callback"
 * check the "Web API" box under "which API/SDKs are you planning to use?"
 * accept spotify api TOS
 * navigate to app dashboard 
